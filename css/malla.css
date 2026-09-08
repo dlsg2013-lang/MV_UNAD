@@ -1,0 +1,340 @@
+/* =========================================================================
+   malla.css — la malla académica interactiva
+   ========================================================================= */
+
+.hero{
+  padding: 3rem 1.75rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+.hero__eyebrow{
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin: 0 0 0.6rem;
+  font-weight: 600;
+}
+.hero h1{
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  margin: 0 0 0.6rem;
+  background: linear-gradient(100deg, var(--navy-dark) 10%, var(--navy) 45%, var(--green) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  max-width: 24ch;
+}
+html[data-theme="dark"] .hero h1{
+  background: linear-gradient(100deg, #EAEAEA 10%, #7FD9C4 55%, var(--orange) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.hero p{
+  max-width: 62ch;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+}
+
+/* ---------- Leyenda (panel glass) ---------- */
+.legend{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  padding: 1.1rem 1.3rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  align-items: center;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-sm);
+}
+.legend__group{ display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+.legend__label{
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-right: 0.2rem;
+}
+.legend__chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+}
+.legend__dot{
+  width: 0.6rem; height: 0.6rem; border-radius: 50%;
+  flex: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent);
+}
+.legend__hint{
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ---------- Panel contenedor de la malla (scroll acotado, con estilo) ---------- */
+.malla-wrap{
+  max-width: 1400px;
+  margin: 1.5rem auto 4rem;
+  padding: 0 1.75rem;
+}
+.malla-panel{
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 1.25rem;
+  overflow: auto;
+  max-height: min(72vh, 780px);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.malla{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(190px, 1fr);
+  gap: 14px;
+  align-items: start;
+  perspective: 1400px;
+}
+
+.periodo{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.periodo__header{
+  border-radius: 8px;
+  padding: 0.6rem 0.6rem;
+  color: #fff;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  box-shadow: var(--shadow-sm);
+}
+
+.periodo__footer{
+  margin-top: 4px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  padding: 0.4rem 0.2rem 0;
+  border-top: 2px dashed var(--line);
+}
+.periodo__footer strong{
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+/* ---------- Tarjeta de curso ---------- */
+.curso{
+  --card-color: var(--navy);
+  position: relative;
+  border-radius: 10px;
+  background: linear-gradient(160deg,
+    color-mix(in srgb, var(--card-color) 14%, var(--paper-2)) 0%,
+    var(--paper-2) 65%);
+  border: 1px solid var(--line);
+  padding: 0.55rem 0.6rem 0.6rem;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transform: translateZ(0) scale(1);
+  transition: transform 0.35s cubic-bezier(.2,.8,.2,1),
+              box-shadow 0.35s ease,
+              opacity 0.3s ease,
+              filter 0.3s ease;
+  will-change: transform;
+  overflow: hidden;
+}
+.curso::after{
+  /* gleam sutil superior, look "vidrio" */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,0.35), transparent 45%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+html[data-theme="dark"] .curso::after{ background: linear-gradient(160deg, rgba(255,255,255,0.06), transparent 45%); }
+
+.curso__type{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: #fff;
+  background: var(--tipo-color, #888);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  margin-bottom: 0.35rem;
+  position: relative;
+}
+
+.curso__name{
+  font-size: 0.78rem;
+  line-height: 1.28;
+  color: var(--ink);
+  font-weight: 600;
+  position: relative;
+}
+.curso__code{
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  position: relative;
+}
+.curso__note{
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.62rem;
+  font-style: italic;
+  color: var(--orange);
+  position: relative;
+}
+
+.curso::before{
+  /* franja de color del periodo, a la izquierda */
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 10px 0 0 10px;
+  background: var(--card-color);
+  z-index: 1;
+}
+
+/* Estado hover / foco: "se levanta hacia el frente" */
+.curso:hover,
+.curso:focus-visible{
+  transform: translateZ(40px) scale(1.06);
+  box-shadow: var(--shadow-lg), 0 0 0 1px color-mix(in srgb, var(--card-color) 40%, transparent);
+  z-index: 20;
+  border-color: var(--card-color);
+}
+
+.curso.is-active{
+  transform: translateZ(55px) scale(1.08);
+  box-shadow: var(--shadow-lg), 0 0 0 2px var(--card-color);
+  z-index: 25;
+}
+
+.curso.is-prereq{
+  transform: translateZ(22px) scale(1.035);
+  box-shadow: var(--shadow-md), 0 0 0 1px color-mix(in srgb, var(--card-color) 55%, transparent);
+  z-index: 15;
+  border-color: var(--card-color);
+}
+
+.malla.has-focus .curso:not(.is-active):not(.is-prereq){
+  opacity: 0.25;
+  filter: saturate(0.35);
+  transform: translateZ(0) scale(0.98);
+}
+
+.curso.is-active::before{
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 12px;
+  border: 2px solid var(--card-color);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: pulse 1.4s ease-out infinite;
+  background: none;
+  width: auto;
+}
+@keyframes pulse{
+  0%   { transform: scale(1);   opacity: 0.5; }
+  100% { transform: scale(1.12); opacity: 0; }
+}
+
+/* ---------- Panel lateral de detalle (glass) ---------- */
+.detalle{
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  max-width: 320px;
+  background: var(--nav-bg);
+  color: var(--gray-100);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  box-shadow: var(--shadow-lg);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  transform: translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  z-index: 60;
+  border: 1px solid rgba(234,234,234,0.12);
+  backdrop-filter: blur(14px);
+}
+.detalle.is-visible{
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.detalle h3{
+  margin: 0 0 0.25rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.detalle p{ margin: 0.2rem 0; color: rgba(234,234,234,0.85); }
+.detalle__close{
+  position: absolute;
+  top: 0.5rem; right: 0.6rem;
+  background: none; border: none;
+  color: rgba(234,234,234,0.6);
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.detalle__close:hover{ color: #fff; }
+.detalle__list{
+  margin: 0.4rem 0 0;
+  padding-left: 1.1rem;
+}
+.detalle__list li{ margin-bottom: 0.15rem; }
+
+@media (max-width: 640px){
+  .malla{ grid-auto-columns: minmax(160px, 1fr); }
+  .malla-panel{ max-height: 68vh; padding: 0.85rem; }
+  .curso:hover, .curso:focus-visible{ transform: translateZ(0) scale(1.03); }
+}

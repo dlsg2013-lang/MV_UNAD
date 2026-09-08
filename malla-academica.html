@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Malla académica · Medicina Veterinaria</title>
+<meta name="description" content="Malla académica interactiva del programa de Medicina Veterinaria." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/malla.css" />
+</head>
+<body>
+
+<div class="orb orb--navy"   style="width:520px;height:520px;top:-160px;left:-140px;"></div>
+<div class="orb orb--green"  style="width:460px;height:460px;top:22vh;right:-220px;"></div>
+<div class="orb orb--orange" style="width:420px;height:420px;bottom:-180px;left:20vw;"></div>
+
+<nav class="sitenav">
+  <a class="sitenav__brand" href="index.html">Med. Veterinaria <small>Programa académico</small></a>
+  <div class="sitenav__right">
+    <ul class="sitenav__links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="malla-academica.html" aria-current="page">Malla académica</a></li>
+      <li><a href="condicion-1.html">Condición 1</a></li>
+    </ul>
+    <button class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro">🌙</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <p class="hero__eyebrow">Plan de estudios · 10 periodos</p>
+  <h1>Malla académica interactiva</h1>
+  <p>
+    Pasa el cursor (o toca en móvil) sobre cualquier curso para ver la ruta completa
+    de prerrequisitos que debes cursar antes de llegar a él. Cada periodo tiene su
+    propio color y cada curso indica si es Teórico, Práctico o Metodológico.
+  </p>
+
+  <div class="legend">
+    <div class="legend__group">
+      <span class="legend__label">Tipo</span>
+      <span class="legend__chip"><span class="legend__dot" style="background:#D26714;color:#D26714"></span>T · Teórico</span>
+      <span class="legend__chip"><span class="legend__dot" style="background:#C9930C;color:#C9930C"></span>P · Práctico</span>
+      <span class="legend__chip"><span class="legend__dot" style="background:#035B3B;color:#035B3B"></span>M · Metodológico</span>
+    </div>
+    <span class="legend__hint">👆 Pasa el mouse sobre un curso para ver sus prerrequisitos</span>
+  </div>
+</header>
+
+<main class="malla-wrap">
+  <div class="malla-panel">
+    <div class="malla" id="malla" aria-label="Malla académica por periodos"></div>
+  </div>
+</main>
+
+<div class="detalle" id="detalle" role="status" aria-live="polite"></div>
+
+<script src="js/embed-mode.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/malla-data.js"></script>
+<script src="js/malla.js"></script>
+</body>
+</html>

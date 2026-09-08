@@ -1,0 +1,912 @@
+
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Condición 5 · Investigación, Innovación y Creación · Medicina Veterinaria</title>
+    <meta name="description" content="Condición 5: Investigación, innovación y/o creación artística y cultural. Programa de Medicina Veterinaria, UNAD." />
+    
+    <!-- Tipografías Oficiales -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'unad-teal': '#00445B',
+                        'unad-navy': '#01333F',
+                        'unad-green': '#035B3B',
+                        'unad-gray': '#EAEAEA',
+                        'unad-orange': '#D26714',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base textured canvas background (#EAEAEA + texture image with SVG fallback) */
+        body {
+            background-color: #EAEAEA;
+            background-image: 
+                url('835373_preview.jpg'), 
+                radial-gradient(rgba(1, 51, 63, 0.04) 1px, transparent 0);
+            background-size: cover, 24px 24px;
+            background-attachment: fixed;
+            color: #01333F;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.22;
+            animation: orbFloat 20s ease-in-out infinite alternate;
+        }
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -40px) scale(1.08); }
+            100% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        .orb--navy { background-color: #01333F; }
+        .orb--teal { background-color: #00445B; }
+        .orb--green { background-color: #035B3B; }
+        .orb--orange { background-color: #D26714; }
+
+        /* Glassmorphic cards tuned for light background */
+        .card-glass {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(1, 51, 63, 0.12);
+            box-shadow: 0 10px 30px -10px rgba(1, 51, 63, 0.05);
+        }
+
+        .card-glass-accent {
+            background: rgba(3, 91, 59, 0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(3, 91, 59, 0.25);
+        }
+
+        .card-glass-orange {
+            background: rgba(210, 103, 20, 0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(210, 103, 20, 0.25);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 7px; }
+        ::-webkit-scrollbar-track { background: #EAEAEA; }
+        ::-webkit-scrollbar-thumb { background: #00445B; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #035B3B; }
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Embed mode adjustments */
+        body.is-embedded .sitenav {
+            display: none !important;
+        }
+        body.is-embedded {
+            padding-top: 0 !important;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-unad-orange selection:text-white relative min-h-screen">
+
+    <!-- Ambient Orbs -->
+    <div class="orb orb--navy w-[480px] h-[480px] top-[-160px] left-[-140px]"></div>
+    <div class="orb orb--green w-[420px] h-[420px] top-[30vh] right-[-200px]" style="animation-delay: -5s;"></div>
+    <div class="orb orb--orange w-[400px] h-[400px] bottom-[-180px] left-[20vw]" style="animation-delay: -10s;"></div>
+
+    <nav class="sitenav fixed top-0 w-full z-50 bg-[#EAEAEA]/90 backdrop-blur-md border-b border-unad-navy/10 py-3 transition-all" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a class="sitenav__brand font-display font-bold text-sm tracking-wide text-unad-navy flex items-center gap-2" href="index.html">
+                <span class="w-3 h-3 rounded-full bg-unad-green inline-block animate-pulse"></span>
+                Med. Veterinaria <small class="text-unad-teal font-normal text-xs uppercase tracking-wider">| Programa académico</small>
+            </a>
+            
+            <div class="sitenav__right flex items-center gap-6">
+                <ul class="sitenav__links hidden md:flex items-center gap-6 font-display text-xs font-semibold uppercase tracking-wider text-unad-navy/70">
+                    <li><a href="index.html" class="hover:text-unad-green transition-colors">Inicio</a></li>
+                    <li><a href="malla-academica.html" class="hover:text-unad-green transition-colors">Malla académica</a></li>
+                    <li><a href="condicion-5.html" aria-current="page" class="text-unad-green border-b-2 border-unad-green pb-1">Condición 5</a></li>
+                </ul>
+                <button class="theme-toggle px-3 py-1 rounded-full bg-unad-navy/5 hover:bg-unad-navy/10 text-xs font-mono text-unad-navy transition-all" type="button" onclick="toggleEmbedPreview()" title="Modo Incrustado / Normal">
+                    🔍 Vista Embed
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="cond-hero pt-28 pb-16 px-6 text-center max-w-5xl mx-auto reveal active">
+        <div class="inline-block px-4 py-1.5 rounded-full bg-unad-green/10 border border-unad-green/30 text-unad-green text-xs font-display font-bold uppercase tracking-widest mb-6">
+            Solicitud de registro calificado · modalidad híbrida
+        </div>
+        <p class="cond-hero__eyebrow font-display text-sm font-extrabold uppercase tracking-[0.25em] text-unad-orange mb-2">
+            Programa de Medicina Veterinaria
+        </p>
+        <h1 class="font-display text-5xl md:text-7xl font-extrabold text-unad-navy mb-4 tracking-tight">
+            Condición <span class="text-unad-green">5</span>
+        </h1>
+        <p class="font-display text-xl md:text-2xl font-bold text-unad-teal max-w-3xl mx-auto leading-snug mb-8">
+            Investigación, innovación y/o creación artística y cultural
+        </p>
+        
+        <div class="card-glass-accent p-6 md:p-8 rounded-2xl text-left max-w-2xl mx-auto border-l-4 border-l-unad-green shadow-md mb-6">
+            <p class="text-xs font-display font-bold uppercase tracking-widest text-unad-green mb-2">Propósito de la Presentación</p>
+            <p class="text-sm md:text-base text-unad-navy/90 leading-relaxed">
+                Documento separado y depurado para convertir directamente en presentación. Cada página organiza el contenido central, la evidencia y el aspecto de verificación que corresponde a la condición de calidad exigida por el MEN.
+            </p>
+        </div>
+        
+        <p class="font-mono text-xs text-unad-navy/50 tracking-wider uppercase">Septiembre de 2026 · UNAD</p>
+    </header>
+
+    <main class="cond-body max-w-7xl mx-auto px-6 pb-24 space-y-20">
+
+        <section id="slide-1" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl relative overflow-hidden border-t-4 border-t-unad-teal">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-teal/10 text-unad-teal font-mono text-xs font-bold">DIAPOSITIVA 1</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Marco General de Verificación</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Qué verificará el par académico en la Condición 5</h2>
+                <p class="text-base text-unad-teal/90 mb-8 font-medium">La presentación debe demostrar coherencia entre la declaración investigativa, el proceso formativo, la modalidad híbrida y la proyección a siete años.</p>
+
+                <!-- Tabla Ejes -->
+                <div class="overflow-x-auto mb-8">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-unad-navy/5 text-unad-navy font-display font-bold text-xs uppercase">
+                                <th class="p-3.5 rounded-l-lg">Eje de verificación</th>
+                                <th class="p-3.5 rounded-r-lg">Demostración esperada</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-unad-navy/10 text-xs md:text-sm">
+                            <tr>
+                                <td class="p-3.5 font-bold text-unad-teal w-1/4">Declaración</td>
+                                <td class="p-3.5">La incorporación de la investigación e innovación es coherente con un programa profesional, con la misión institucional y con el campo de la Medicina Veterinaria.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-unad-teal">Formación</td>
+                                <td class="p-3.5">Existen estrategias, medios y contenidos concretos para desarrollar competencias investigativas en los estudiantes.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-unad-teal">Articulación académica</td>
+                                <td class="p-3.5">Las actividades curriculares y docentes se nutren de investigación, innovación y conocimiento actualizado.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-unad-teal">Áreas y líneas</td>
+                                <td class="p-3.5">Las líneas y temáticas se relacionan con el objeto de estudio, el perfil de egreso y las necesidades regionales y nacionales.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-unad-teal">Proyección a 7 años</td>
+                                <td class="p-3.5">La agenda identifica actividades, recursos humanos, financieros, tecnológicos y físicos, fuentes de financiación y resultados esperados.</td>
+                            </tr>
+                            <tr class="bg-unad-orange/5">
+                                <td class="p-3.5 font-bold text-unad-orange">Marco normativo</td>
+                                <td class="p-3.5 text-xs">Decreto 1075 de 2015, modificado por el Decreto 1330 de 2019, art. 2.5.3.2.3.2.6; Resolución 21795 de 2020, arts. 25 a 31. La Nota Orientadora del MEN centra la verificación en declaración, formación, articulación, líneas y proyección de siete años.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Coherencia, suficiencia y trazabilidad de la investigación declarada para el programa.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Documento de Condición 5; Tablas 5.5–5.12; Figuras 5.10–5.18; soportes institucionales de SIGI, ECAPMA y Estatuto de Investigación.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: MEN, Nota Orientadora de Condiciones de Programa; Condición 5 suministrada.</p>
+            </div>
+        </section>
+
+        <section id="slide-2" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-green">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-green/10 text-unad-green font-mono text-xs font-bold">DIAPOSITIVA 2</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Fundamentación Investigativa</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Declaración investigativa del Programa de Medicina Veterinaria</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La investigación se presenta como eje transversal de la formación profesional y no como una actividad aislada.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-sm">
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-white/60 border border-unad-navy/10 flex items-start gap-3">
+                            <span class="text-unad-green font-bold text-lg leading-none">•</span>
+                            <p><strong>Integralidad:</strong> Integra formación científica, pensamiento crítico, innovación y solución de problemas en salud animal, salud pública veterinaria, bienestar animal, producción pecuaria sostenible, inocuidad alimentaria y conservación de fauna silvestre.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/60 border border-unad-navy/10 flex items-start gap-3">
+                            <span class="text-unad-green font-bold text-lg leading-none">•</span>
+                            <p><strong>Enfoque Una Salud (One Health):</strong> Articula salud animal, salud humana y ecosistemas, y orienta el abordaje de zoonosis, resistencia antimicrobiana, vigilancia epidemiológica, medicina preventiva e inocuidad.</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-white/60 border border-unad-navy/10 flex items-start gap-3">
+                            <span class="text-unad-green font-bold text-lg leading-none">•</span>
+                            <p><strong>Estrategias Pedagógicas:</strong> La investigación se incorpora de manera transversal mediante Aprendizaje Basado en Investigación (ABI), Aprendizaje Basado en Problemas (ABP) y Aprendizaje Basado en Proyectos (ABPr).</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/60 border border-unad-navy/10 flex items-start gap-3">
+                            <span class="text-unad-green font-bold text-lg leading-none">•</span>
+                            <p><strong>Pertinencia Territorial:</strong> La pertinencia se sostiene en el vínculo entre problemas territoriales, formación, producción de conocimiento, innovación y apropiación social.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-glass-accent p-6 rounded-2xl mb-6 border border-unad-green/30">
+                    <span class="text-xs font-display font-bold uppercase tracking-wider text-unad-green block mb-1">MENSAJE CENTRAL</span>
+                    <p class="font-display font-semibold text-base text-unad-navy leading-relaxed">
+                        "El programa declara una investigación aplicada y formativa, pertinente al ejercicio veterinario y articulada con las necesidades sanitarias, productivas y ambientales de los territorios."
+                    </p>
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Que la declaración sea específica para Medicina Veterinaria, coherente con el nivel profesional y con la modalidad híbrida.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Apartado 5.3.1; Figura 5.10; PAPS, MHUS 5.0 y política institucional de investigación.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, apartado 5.3.1 y Figura 5.10.</p>
+            </div>
+        </section>
+
+        <section id="slide-3" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-teal">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-teal/10 text-unad-teal font-mono text-xs font-bold">DIAPOSITIVA 3</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Gobernanza Institucional</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Soporte institucional: gobernanza, investigación e innovación</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La capacidad del programa se apoya en estructuras institucionales existentes y en la experiencia de ECAPMA.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white/70 p-5 rounded-2xl border border-unad-navy/10">
+                        <h4 class="font-display font-bold text-unad-teal text-sm mb-2">PAPS / MHUS 5.0</h4>
+                        <p class="text-xs leading-relaxed text-unad-navy/80">Marco pedagógico e institucional que integra formación, investigación, innovación, inclusión y transformación territorial.</p>
+                    </div>
+                    <div class="bg-white/70 p-5 rounded-2xl border border-unad-navy/10">
+                        <h4 class="font-display font-bold text-unad-teal text-sm mb-2">Estatuto de Investigación (Acuerdo 024 de 2012)</h4>
+                        <p class="text-xs leading-relaxed text-unad-navy/80">Define grupos, investigadores, proyectos, roles y criterios institucionales para la actividad investigativa.</p>
+                    </div>
+                    <div class="bg-white/70 p-5 rounded-2xl border border-unad-navy/10">
+                        <h4 class="font-display font-bold text-unad-teal text-sm mb-2">SIGI</h4>
+                        <p class="text-xs leading-relaxed text-unad-navy/80">Gestiona convocatorias, grupos, semilleros, proyectos, seguimiento y producción investigativa.</p>
+                    </div>
+                    <div class="bg-white/70 p-5 rounded-2xl border border-unad-navy/10">
+                        <h4 class="font-display font-bold text-unad-teal text-sm mb-2">ECAPMA</h4>
+                        <p class="text-xs leading-relaxed text-unad-navy/80">Aporta líneas, grupos, semilleros, proyectos, redes y experiencia disciplinar afín al campo veterinario.</p>
+                    </div>
+                    <div class="bg-white/70 p-5 rounded-2xl border border-unad-navy/10 md:col-span-2">
+                        <h4 class="font-display font-bold text-unad-teal text-sm mb-2">VIEM y centros de innovación</h4>
+                        <p class="text-xs leading-relaxed text-unad-navy/80">Favorecen transferencia, emprendimiento, desarrollo tecnológico y articulación estratégica con actores externos del sector pecuario.</p>
+                    </div>
+                </div>
+
+                <div class="card-glass-orange p-6 rounded-2xl mb-6 border border-unad-orange/30">
+                    <span class="text-xs font-display font-bold uppercase tracking-wider text-unad-orange block mb-1">DISTINCIÓN ESENCIAL</span>
+                    <p class="text-sm font-medium text-unad-navy">
+                        La experiencia histórica de UNAD y ECAPMA demuestra capacidad institucional real. Los resultados propios del nuevo Programa de Medicina Veterinaria se acreditarán a medida que se ejecuten su agenda, proyectos y productos.
+                    </p>
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Capacidad institucional real para implementar la declaración investigativa.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Acuerdo 024 de 2012; SIGI; estructura ECAPMA; Modelo Unadista de Investigación e Innovación; VIEM.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, apartados 5.1, 5.2 y 5.3.</p>
+            </div>
+        </section>
+
+        <section id="slide-4" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-orange">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-orange/10 text-unad-orange font-mono text-xs font-bold">DIAPOSITIVA 4</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Estructura Curricular Investigativa</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Arquitectura investigativa: núcleos problémicos, líneas y sublíneas</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La estructura investigativa se vincula directamente con el currículo y con los problemas centrales del ejercicio veterinario.</p>
+
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-left text-xs md:text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-unad-navy/5 text-unad-navy font-display font-bold text-xs uppercase">
+                                <th class="p-3.5 border-b border-unad-navy/10">Núcleo problémico</th>
+                                <th class="p-3.5 border-b border-unad-navy/10">Línea</th>
+                                <th class="p-3.5 border-b border-unad-navy/10">Sublíneas declaradas</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-unad-navy/10">
+                            <tr>
+                                <td class="p-3.5 font-bold text-unad-navy">NP1: Salud animal y producción sostenible</td>
+                                <td class="p-3.5 font-semibold text-unad-teal">Sistemas Sostenibles de Producción Agrarios</td>
+                                <td class="p-3.5 text-xs">Metabolismo, nutrición y alimentación animal; competitividad en sistemas de producción animal; biotecnología en sistemas de producción animal.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-unad-navy">NP1: Salud animal y producción sostenible</td>
+                                <td class="p-3.5 font-semibold text-unad-teal">Desarrollo rural</td>
+                                <td class="p-3.5 text-xs">Proyección social; sistemas alternativos de producción y gestión de los agronegocios.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-bold text-unad-navy">NP2: Enfermedades animales y salud pública veterinaria (One Health)</td>
+                                <td class="p-3.5 font-semibold text-unad-teal">Biodiversidad y Servicios Ecosistémicos</td>
+                                <td class="p-3.5 text-xs">Biodiversidad y recursos genéticos; reproducción y mejoramiento genético.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4 rounded-xl bg-white/70 border border-unad-teal/20 mb-6 text-xs text-unad-navy">
+                    <span class="font-display font-bold text-unad-teal block mb-1">Focos de aplicación señalados en la condición:</span>
+                    Epidemiología, zoonosis, inocuidad alimentaria, resistencia antimicrobiana, medicina preventiva, bienestar animal y conservación de fauna silvestre.
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Correspondencia entre currículo, objeto de estudio, necesidades del contexto y estructura de investigación.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Tablas 5.3 y 5.6; Figura 5.11; articulación con resultados de aprendizaje y perfil de egreso.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, Tablas 5.3 y 5.6.</p>
+            </div>
+        </section>
+
+        <section id="slide-5" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-green">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-green/10 text-unad-green font-mono text-xs font-bold">DIAPOSITIVA 5</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Ruta Estudiantil</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Ruta de formación investigativa del estudiante</h2>
+                <p class="text-base text-unad-teal/90 mb-8 font-medium">La formación progresa desde el diseño metodológico y la gestión de información hasta la ejecución de un proyecto aplicado.</p>
+
+                <!-- Diagrama de Progresión Estudiantil -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
+                    <div class="p-6 rounded-2xl bg-white/80 border-t-4 border-t-unad-teal border-x border-b border-unad-navy/10 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="font-mono text-xs text-unad-teal font-bold block mb-1">01. FORMATIVO</span>
+                            <h4 class="font-display font-bold text-unad-navy text-base mb-2">Diseño Experimental</h4>
+                            <p class="text-xs text-unad-navy/70 mb-4">Problema, hipótesis, variables, diseño y método.</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-unad-teal/5 text-xs text-unad-teal font-bold">
+                            Producto: Protocolo experimental y propuesta aplicada.
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-white/80 border-t-4 border-t-unad-green border-x border-b border-unad-navy/10 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="font-mono text-xs text-unad-green font-bold block mb-1">02. GESTIÓN</span>
+                            <h4 class="font-display font-bold text-unad-navy text-base mb-2">Herramientas Digitales para la Gestión del Conocimiento</h4>
+                            <p class="text-xs text-unad-navy/70 mb-4">Búsqueda científica, análisis, gestión bibliográfica y uso ético.</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-unad-green/5 text-xs text-unad-green font-bold">
+                            Producto: Estado del arte y matriz documental.
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-white/80 border-t-4 border-t-unad-orange border-x border-b border-unad-navy/10 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="font-mono text-xs text-unad-orange font-bold block mb-1">03. GRADO</span>
+                            <h4 class="font-display font-bold text-unad-navy text-base mb-2">Opción de Grado: Proyecto de Investigación</h4>
+                            <p class="text-xs text-unad-navy/70 mb-4">Investigación aplicada, innovación, transferencia y solución territorial.</p>
+                        </div>
+                        <div class="p-3 rounded-lg bg-unad-orange/5 text-xs text-unad-orange font-bold">
+                            Producto: Trabajo de grado, artículo o ponencia.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center p-3 rounded-xl bg-unad-orange/10 border border-unad-orange/20 text-xs font-display font-bold text-unad-orange mb-8">
+                    Trayectoria transversal: semilleros · grupos · eventos · redes · movilidad
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Existencia de una ruta formativa progresiva con productos evaluables y articulación con las líneas del programa.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Tabla 5.5; apartado 5.3.4; ruta de formación investigativa y opciones de grado.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, Tabla 5.5 y apartado 5.3.4.</p>
+            </div>
+        </section>
+
+        <section id="slide-6" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-teal">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-teal/10 text-unad-teal font-mono text-xs font-bold">DIAPOSITIVA 6</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Participación Estudiantil</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Semilleros de investigación: capacidad de participación estudiantil</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">ECAPMA dispone de una base de semilleros afines a la cadena pecuaria que amplía las oportunidades de formación investigativa.</p>
+
+                <!-- Gráfico Distributivo de Semilleros -->
+                <div class="bg-white/80 p-6 rounded-2xl border border-unad-navy/10 mb-6">
+                    <h4 class="font-display font-bold text-unad-navy text-sm mb-4 text-center">Semilleros ECAPMA afines al área pecuaria por zona (Total: 15 semilleros)</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+                        <div class="p-3 rounded-xl bg-unad-green/10 border border-unad-green/30">
+                            <span class="text-2xl font-display font-bold text-unad-green block">4</span>
+                            <span class="text-xs font-bold text-unad-navy">ZCSUR</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-unad-green/10 border border-unad-green/30">
+                            <span class="text-2xl font-display font-bold text-unad-green block">4</span>
+                            <span class="text-xs font-bold text-unad-navy">ZOCC</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-unad-teal/10 border border-unad-teal/30">
+                            <span class="text-2xl font-display font-bold text-unad-teal block">3</span>
+                            <span class="text-xs font-bold text-unad-navy">ZCBOY</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-unad-teal/10 border border-unad-teal/30">
+                            <span class="text-2xl font-display font-bold text-unad-teal block">3</span>
+                            <span class="text-xs font-bold text-unad-navy">ZSUR</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-unad-orange/10 border border-unad-orange/30 col-span-2 md:col-span-1">
+                            <span class="text-2xl font-display font-bold text-unad-orange block">1</span>
+                            <span class="text-xs font-bold text-unad-navy">ZCAR</span>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="space-y-2 text-xs md:text-sm text-unad-navy/80 mb-6 pl-4 list-disc">
+                    <li>La Tabla 5.4 identifica 15 semilleros afines a la cadena pecuaria distribuidos en cinco zonas institucionales.</li>
+                    <li>Los temas incluyen biotecnología y reproducción animal, bienestar animal, ganadería, producción pecuaria, nutrición, mejoramiento, sistemas productivos y desarrollo rural.</li>
+                    <li>Esta red constituye capacidad institucional disponible para la vinculación progresiva de estudiantes del nuevo programa.</li>
+                </ul>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Disponibilidad de escenarios extracurriculares coherentes con las áreas del programa.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Tabla 5.4; registros institucionales de semilleros ECAPMA; rutas de vinculación estudiantil a investigación.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, Tabla 5.4.</p>
+            </div>
+        </section>
+
+        <section id="slide-7" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-orange">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-orange/10 text-unad-orange font-mono text-xs font-bold">DIAPOSITIVA 7</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Grupos Consolidados</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Grupos de investigación: capacidad institucional disponible</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La condición identifica seis grupos de ECAPMA con afinidad temática directa con las líneas del programa (5 en Categ. A, 1 en Categ. B).</p>
+
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-left text-xs md:text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-unad-navy/5 text-unad-navy font-display font-bold text-xs uppercase">
+                                <th class="p-3.5 border-b border-unad-navy/10">Grupo</th>
+                                <th class="p-3.5 border-b border-unad-navy/10">Categoría</th>
+                                <th class="p-3.5 border-b border-unad-navy/10">Afinidad temática declarada</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-unad-navy/10">
+                            <tr><td class="p-3 font-bold text-unad-navy">TECNOGENESIS</td><td class="p-3 font-bold text-unad-green">A</td><td class="p-3">Biodiversidad y recursos genéticos; desarrollo rural</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">CIAB</td><td class="p-3 font-bold text-unad-green">A</td><td class="p-3">Biodiversidad y servicios ecosistémicos</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">GICAFAT</td><td class="p-3 font-bold text-unad-green">A</td><td class="p-3">Mejoramiento y nutrición animal; desarrollo rural</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">GEAA</td><td class="p-3 font-bold text-unad-green">A</td><td class="p-3">Biodiversidad y servicios ecosistémicos; desarrollo rural</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Producción Sostenible</td><td class="p-3 font-bold text-unad-green">A</td><td class="p-3">Biodiversidad, conservación y biotecnología</td></tr>
+                            <tr class="bg-unad-orange/5"><td class="p-3 font-bold text-unad-navy">ZOOBIOS</td><td class="p-3 font-bold text-unad-orange">B</td><td class="p-3">Nutrición animal; epidemiología; enfermedades infecciosas; reproducción y mejoramiento</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Capacidad investigativa institucional afín al campo veterinario.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Tabla 5.7; GrupLAC; líneas y sublíneas del programa.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, Tabla 5.7.</p>
+            </div>
+        </section>
+
+        <section id="slide-8" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-green">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-green/10 text-unad-green font-mono text-xs font-bold">DIAPOSITIVA 8</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Gestión Docente</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Vinculación de profesores a la investigación</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La participación profesoral se formaliza mediante grupos, proyectos, convocatorias y planes de trabajo dentro del SIGI.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 text-xs">
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10">
+                        <span class="font-bold text-unad-teal block mb-1">Ingreso a grupos</span>
+                        <p class="text-unad-navy/80">Vinculación vigente a la UNAD, perfil investigativo afín, manifestación de interés y evaluación de trayectoria por el líder.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10">
+                        <span class="font-bold text-unad-teal block mb-1">Trazabilidad del investigador</span>
+                        <p class="text-unad-navy/80">Perfiles CvLAC, ORCID y Google Scholar; plan de trabajo anual; actividades y productos registrados.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10">
+                        <span class="font-bold text-unad-teal block mb-1">Roles regulados</span>
+                        <p class="text-unad-navy/80">Líder de grupo, investigador principal, coinvestigador, investigador externo, auxiliar y estudiante semilla.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10 md:col-span-2">
+                        <span class="font-bold text-unad-teal block mb-1">Dedicación (Horas/semana)</span>
+                        <p class="text-unad-navy/80">Investigador principal: 13–17 h/semana; un coinvestigador: 8–12 h; dos o más coinvestigadores: 3–7 h, en proyectos con financiación institucional y aval formal.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10">
+                        <span class="font-bold text-unad-teal block mb-1">Incentivos y apoyo</span>
+                        <p class="text-unad-navy/80">Movilidad, publicaciones, membrecías y cualificación asociada a productividad.</p>
+                    </div>
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Existencia de un mecanismo real de vinculación profesoral y tiempo institucional para investigación.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Apartado de vinculación profesoral; Tabla 5.8; Acuerdo 024 de 2012; SIGI.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, apartado 5.3.3 y Tabla 5.8.</p>
+            </div>
+        </section>
+
+        <section id="slide-9" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-teal">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-teal/10 text-unad-teal font-mono text-xs font-bold">DIAPOSITIVA 9</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Infraestructura Híbrida</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Ecosistema híbrido para investigación aplicada</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La modalidad híbrida combina recursos virtuales, infraestructura presencial y escenarios externos formalizados.</p>
+
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-left text-xs md:text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-unad-navy/5 text-unad-navy font-display font-bold text-xs uppercase">
+                                <th class="p-3.5 border-b border-unad-navy/10">Escenario</th>
+                                <th class="p-3.5 border-b border-unad-navy/10">Aplicación</th>
+                                <th class="p-3.5 border-b border-unad-navy/10">Soporte</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-unad-navy/10">
+                            <tr><td class="p-3 font-bold text-unad-navy">Laboratorios disciplinares</td><td class="p-3">Microbiología, parasitología, patología, reproducción y biología molecular</td><td class="p-3 text-xs">Infraestructura y protocolos institucionales.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Escenarios clínicos</td><td class="p-3">Diagnóstico, medicina preventiva, bienestar animal y atención veterinaria</td><td class="p-3 text-xs">Disponibilidad institucional o convenio formal.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Unidades productivas</td><td class="p-3">Salud de poblaciones, nutrición, reproducción, bienestar y producción sostenible</td><td class="p-3 text-xs">Infraestructura propia o convenio formal.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Escenarios externos</td><td class="p-3">Vigilancia sanitaria, diagnóstico, investigación y transferencia</td><td class="p-3 text-xs">Convenios o alianzas formalizadas.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Entornos virtuales</td><td class="p-3">Simulación, consulta científica, repositorios, análisis de datos y colaboración</td><td class="p-3 text-xs">Plataformas y recursos tecnológicos institucionales.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Coherencia de la investigación con la modalidad híbrida y disponibilidad de ambientes pertinentes.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Tabla 5.11; Figuras 5.14 y 5.17; infraestructura, protocolos, plataformas y convenios.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, Tabla 5.11 y Figura 5.17.</p>
+            </div>
+        </section>
+
+        <section id="slide-10" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-orange">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-orange/10 text-unad-orange font-mono text-xs font-bold">DIAPOSITIVA 10</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Sostenibilidad</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Recursos para sostener la investigación e innovación</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La suficiencia se demuestra mediante una combinación de talento humano, inversión, tecnologías, infraestructura y recursos bibliográficos.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6 text-xs">
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-orange block mb-1">Humanos</span>Horas de investigación, investigadores vinculados a grupos, líderes y equipos de proyectos.</div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-orange block mb-1">Financieros</span>Cofinanciación de proyectos y convocatorias institucionales, sujeta a asignación presupuestal y disponibilidad.</div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-orange block mb-1">Tecnológicos</span>Plataformas para gestión y seguimiento de proyectos, software especializado, repositorios y herramientas de análisis.</div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-orange block mb-1">Físicos</span>Laboratorios, escenarios clínicos y productivos, centros y nodos, según disponibilidad institucional o convenios.</div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-orange block mb-1">Bibliográficos</span>Sistema Nacional de Bibliotecas, bases de datos, revistas indexadas, repositorios y convenios interbibliotecarios.</div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-orange block mb-1">Visibilidad y movilidad</span>Apoyo a eventos, publicaciones, membresías, redes, pasantías y movilidad académica.</div>
+                </div>
+
+                <div class="card-glass-accent p-5 rounded-2xl mb-6 border border-unad-green/30 text-xs">
+                    <span class="font-display font-bold text-unad-green uppercase block mb-1">CRITERIO DE SUFICIENCIA</span>
+                    <p class="text-unad-navy font-medium">La proyección investigativa se sostiene durante siete años mediante recursos humanos, financieros, tecnológicos y físicos, posibles fuentes de financiación y resultados esperados.</p>
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Suficiencia y sostenibilidad de los recursos declarados para ejecutar la agenda.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Apartados 5.3.5 y 5.3.6; Acuerdo 024 de 2012; recursos tecnológicos y bibliográficos institucionales.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, apartados 5.3.5–5.3.6; MEN, Resolución 21795 de 2020.</p>
+            </div>
+        </section>
+
+        <section id="slide-11" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-green">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-green/10 text-unad-green font-mono text-xs font-bold">DIAPOSITIVA 11</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Horizonte Temporal</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Agenda Estratégica de Investigación a siete años</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La agenda organiza una progresión verificable desde la instalación de capacidades hasta la consolidación de cooperación e impacto.</p>
+
+                <!-- Diagrama Fase a 7 Años -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="p-6 rounded-2xl bg-white/80 border-t-4 border-t-unad-teal text-left shadow-sm">
+                        <span class="text-xs font-bold font-mono text-unad-teal block mb-1">AÑOS 1 – 2</span>
+                        <h4 class="font-display font-bold text-unad-navy text-base mb-2">Instalar capacidades</h4>
+                        <p class="text-xs text-unad-navy/80">Convocatoria anual a semilleros; ≥1 propuesta/proyecto; ≥1 alianza activa; primer coloquio en año 2.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-white/80 border-t-4 border-t-unad-green text-left shadow-sm">
+                        <span class="text-xs font-bold font-mono text-unad-green block mb-1">AÑOS 3 – 5</span>
+                        <h4 class="font-display font-bold text-unad-navy text-base mb-2">Crecer y posicionar</h4>
+                        <p class="text-xs text-unad-navy/80">≥1 artículo sometido en año 3; 1–2 productos en año 4; participación anual en convocatorias; ≈4 alianzas activas al año 5.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-white/80 border-t-4 border-t-unad-orange text-left shadow-sm">
+                        <span class="text-xs font-bold font-mono text-unad-orange block mb-1">AÑOS 6 – 7</span>
+                        <h4 class="font-display font-bold text-unad-navy text-base mb-2">Consolidar liderazgo</h4>
+                        <p class="text-xs text-unad-navy/80">≥1 proyecto colaborativo externo en año 6; 4–5 alianzas funcionales al año 7; producción e impacto acumulados verificables.</p>
+                    </div>
+                </div>
+
+                <p class="text-center text-xs text-unad-navy/60 italic mb-6">La progresión evita prometer resultados maduros desde el primer año y permite evaluar capacidades, producción, cooperación e impacto.</p>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Existencia de una proyección de siete años con secuencia, actividades y resultados esperados.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Figura 5.18; Tabla 5.12; Tabla 5.9 de indicadores anuales.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, Figura 5.18 y Tablas 5.9 y 5.12.</p>
+            </div>
+        </section>
+
+        <section id="slide-12" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-teal">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-teal/10 text-unad-teal font-mono text-xs font-bold">DIAPOSITIVA 12</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Visibilidad Científica</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Producción, visibilidad y cooperación científica</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">La estrategia de visibilidad combina capacidades editoriales, eventos, redes y movilidad institucional.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-xs">
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-teal block mb-1">Visibilidad nacional</span>Eventos del SIGI; Congreso Internacional de Ciencias Agrarias y Ambientales (CICAA); RedCOLSI; Programa Delfín; socialización de proyectos y resultados.</div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-teal block mb-1">Publicaciones</span>Sistema de Publicaciones de ECAPMA articulado al Sello Editorial UNAD y apoyo a escritura científica y publicación de alto impacto.</div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-teal block mb-1">Visibilidad internacional</span>Participación institucional de ECAPMA en cinco redes internacionales; alianzas, eventos, proyectos y movilidad.</div>
+                    <div class="p-4 rounded-xl bg-white/70 border border-unad-navy/10"><span class="font-bold text-unad-teal block mb-1">Cooperación</span>Redes académicas, convenios, proyectos colaborativos y espacios para intercambio de conocimiento.</div>
+                </div>
+
+                <div class="card-glass-orange p-5 rounded-2xl mb-6 border border-unad-orange/30 text-xs">
+                    <span class="font-display font-bold text-unad-orange uppercase block mb-1">PRECISIÓN PARA LA SUSTENTACIÓN</span>
+                    <p class="text-unad-navy">La producción histórica y las redes de ECAPMA son soporte institucional. La presentación no las atribuye como resultados del Programa de Medicina Veterinaria antes de que exista ejecución propia documentada.</p>
+                </div>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Existencia de mecanismos reales para generación, difusión y cooperación científica.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Apartados 5.3.8 y 5.3.9; redes ECAPMA; movilidad; CICAA; Sistema de Publicaciones.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, apartados 5.3.8–5.3.9.</p>
+            </div>
+        </section>
+
+        <section id="slide-13" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-orange">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-orange/10 text-unad-orange font-mono text-xs font-bold">DIAPOSITIVA 13</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Transformación Territorial</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Impacto social de la investigación: de la evidencia al mejoramiento</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">Los resultados se orientan a problemas concretos y se documentan mediante transferencia, apropiación y seguimiento.</p>
+
+                <!-- Cadena de Valor del Impacto -->
+                <div class="flex flex-wrap md:flex-nowrap items-center justify-between gap-2 mb-8 text-center text-xs font-bold">
+                    <div class="w-full p-3 rounded-xl bg-white/80 border border-unad-navy/10">Problema</div>
+                    <span class="text-unad-orange font-bold text-lg">→</span>
+                    <div class="w-full p-3 rounded-xl bg-white/80 border border-unad-navy/10">Proyecto</div>
+                    <span class="text-unad-orange font-bold text-lg">→</span>
+                    <div class="w-full p-3 rounded-xl bg-white/80 border border-unad-navy/10">Producto</div>
+                    <span class="text-unad-orange font-bold text-lg">→</span>
+                    <div class="w-full p-3 rounded-xl bg-white/80 border border-unad-navy/10">Transferencia</div>
+                    <span class="text-unad-orange font-bold text-lg">→</span>
+                    <div class="w-full p-3 rounded-xl bg-unad-green/10 border border-unad-green/30 text-unad-green">Resultado</div>
+                </div>
+
+                <ul class="space-y-2 text-xs md:text-sm text-unad-navy/80 mb-6 pl-4 list-disc">
+                    <li>Los proyectos se orientan a salud y bienestar animal, salud pública veterinaria, Una Salud, fauna silvestre y producción sostenible.</li>
+                    <li>La evidencia de impacto registra actores participantes, problema abordado, productos, transferencia/apropiación, resultados y seguimiento.</li>
+                    <li>Los resultados alimentan los indicadores de la Agenda Estratégica y los procesos de autoevaluación y mejoramiento.</li>
+                </ul>
+
+                <!-- Bloque Verificación y Evidencia -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="card-glass-accent p-4 rounded-xl border-l-4 border-l-unad-green">
+                        <span class="font-display font-bold uppercase text-unad-green block mb-1">VERIFICACIÓN DEL PAR</span>
+                        <p class="text-unad-navy/90">Que la declaración investigativa tenga resultados esperados pertinentes y mecanismos de seguimiento.</p>
+                    </div>
+                    <div class="card-glass-orange p-4 rounded-xl border-l-4 border-l-unad-orange">
+                        <span class="font-display font-bold uppercase text-unad-orange block mb-1">EVIDENCIA QUE LO SUSTENTA</span>
+                        <p class="text-unad-navy/90">Apartado 5.3.10; Agenda Estratégica; registros de proyectos, productos, transferencia y apropiación social.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50">Fuente base: Condición 5, apartado 5.3.10.</p>
+            </div>
+        </section>
+
+        <section id="slide-14" class="reveal">
+            <div class="card-glass p-8 md:p-10 rounded-3xl border-t-4 border-t-unad-green">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 rounded-full bg-unad-green/10 text-unad-green font-mono text-xs font-bold">DIAPOSITIVA 14</span>
+                    <span class="text-xs font-display font-bold uppercase text-unad-navy/40">Síntesis para la Visita</span>
+                </div>
+                
+                <h2 class="font-display text-2xl md:text-4xl font-bold text-unad-navy mb-3">Matriz de evidencias para la visita de pares</h2>
+                <p class="text-base text-unad-teal/90 mb-6 font-medium">Síntesis de los soportes que deben estar disponibles para sustentar cada afirmación de la presentación.</p>
+
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-left text-xs md:text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-unad-navy/5 text-unad-navy font-display font-bold text-xs uppercase">
+                                <th class="p-3.5 border-b border-unad-navy/10">Aspecto presentado</th>
+                                <th class="p-3.5 border-b border-unad-navy/10">Soporte principal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-unad-navy/10">
+                            <tr><td class="p-3 font-bold text-unad-navy">Declaración y enfoque One Health</td><td class="p-3">Apartado 5.3.1; Figura 5.10; PAPS y MHUS 5.0.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Líneas y sublíneas</td><td class="p-3">Tablas 5.3 y 5.6; Figura 5.11.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Ruta formativa</td><td class="p-3">Tabla 5.5; apartado 5.3.4; productos de aprendizaje.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Semilleros</td><td class="p-3">Tabla 5.4; registros institucionales de semilleros.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Grupos y profesores</td><td class="p-3">Tablas 5.7 y 5.8; Acuerdo 024/2012; SIGI.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Escenarios híbridos</td><td class="p-3">Tabla 5.11; Figuras 5.14 y 5.17; protocolos, infraestructura y convenios.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Recursos</td><td class="p-3">Apartados 5.3.5–5.3.6; convocatorias, plataformas, bibliotecas y soporte presupuestal.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Agenda a 7 años</td><td class="p-3">Tabla 5.9; Figura 5.18; Tabla 5.12.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Visibilidad</td><td class="p-3">Apartados 5.3.8–5.3.9; redes, movilidad, eventos y publicaciones.</td></tr>
+                            <tr><td class="p-3 font-bold text-unad-navy">Impacto</td><td class="p-3">Apartado 5.3.10; registros de transferencia, apropiación y seguimiento.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-glass-accent p-6 rounded-2xl border border-unad-green/30 text-center">
+                    <span class="font-display font-bold text-xs uppercase tracking-widest text-unad-green block mb-2">CIERRE DE LA CONDICIÓN</span>
+                    <p class="font-display font-semibold text-base text-unad-navy">
+                        "La fortaleza de la Condición 5 está en mostrar una cadena completa: declaración → formación → líneas → capacidades → escenarios y recursos → agenda → productos → transferencia e impacto."
+                    </p>
+                </div>
+                <p class="mt-4 text-[11px] font-mono text-unad-navy/50 text-center">Fuente base: Documento de Condición 5 y marco normativo MEN.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Detection of embed mode (?embed=1) to hide nav for Canva/Genially
+        function checkEmbedMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('embed') && urlParams.get('embed') === '1') {
+                document.body.classList.add('is-embedded');
+            }
+        }
+
+        function toggleEmbedPreview() {
+            document.body.classList.toggle('is-embedded');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkEmbedMode();
+
+            // Intersection Observer for scroll animations
+            const reveals = document.querySelectorAll('.reveal');
+            const observerOptions = {
+                threshold: 0.08,
+                rootMargin: "0px 0px -40px 0px"
+            };
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            reveals.forEach(reveal => revealObserver.observe(reveal));
+        });
+    </script>
+</body>
+</html>

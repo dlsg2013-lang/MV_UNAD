@@ -1,0 +1,217 @@
+/* =========================================================================
+   base.css — fundamentos compartidos por todas las secciones del sitio
+   ========================================================================= */
+
+:root{
+  /* Paleta institucional */
+  --navy:      #00445B;
+  --navy-dark: #01333F;
+  --green:     #035B3B;
+  --gray-100:  #EAEAEA;
+  --orange:    #D26714;
+  --gold:      #C9930C;
+
+  --font-display: 'Montserrat', 'Segoe UI', sans-serif;
+  --font-body: 'Montserrat', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+
+  --radius: 12px;
+  --radius-lg: 18px;
+
+  /* ---- Tema claro (default) ---- */
+  --ink:        #0B1B21;
+  --paper:      #F7F8F7;
+  --paper-2:    #FFFFFF;
+  --line:       rgba(1,51,63,0.12);
+  --nav-bg:     var(--navy-dark);
+  --nav-text:   var(--gray-100);
+  --shadow-sm:  0 1px 2px rgba(1,51,63,0.08);
+  --shadow-md:  0 10px 28px rgba(1,51,63,0.14);
+  --shadow-lg:  0 26px 64px rgba(1,51,63,0.24);
+  --glass-bg:   rgba(255,255,255,0.68);
+  --glass-border: rgba(1,51,63,0.14);
+  --orb-opacity: 0.16;
+  --texture-opacity: 0.5;
+  --scrollbar-track: rgba(1,51,63,0.06);
+  --scrollbar-thumb: rgba(0,68,91,0.35);
+}
+
+html[data-theme="dark"]{
+  --ink:        #EAEAEA;
+  --paper:      #051A22;
+  --paper-2:    #072633;
+  --line:       rgba(234,234,234,0.14);
+  --nav-bg:     #01161D;
+  --nav-text:   var(--gray-100);
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.35);
+  --shadow-md:  0 10px 28px rgba(0,0,0,0.45);
+  --shadow-lg:  0 26px 64px rgba(0,0,0,0.55);
+  --glass-bg:   rgba(7,38,51,0.6);
+  --glass-border: rgba(234,234,234,0.12);
+  --orb-opacity: 0.30;
+  --texture-opacity: 0.16;
+  --scrollbar-track: rgba(234,234,234,0.06);
+  --scrollbar-thumb: rgba(210,103,20,0.45);
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  min-height: 100vh;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+/* Textura de fondo institucional, sutil y fija */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image: url("assets/Fondo_1.png");
+  background-size: cover;
+  background-position: center;
+  opacity: var(--texture-opacity);
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+html[data-theme="dark"] body::before{ filter: invert(1) brightness(0.6); }
+
+img{ max-width: 100%; display: block; }
+a{ color: inherit; }
+
+/* ---------- Orbes ambientales (degradados de marca) ---------- */
+.orb{
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: -1;
+  opacity: var(--orb-opacity);
+  pointer-events: none;
+}
+.orb--navy{ background: var(--navy); }
+.orb--green{ background: var(--green); }
+.orb--orange{ background: var(--orange); }
+
+/* ---------- Barra de navegación del sitio ---------- */
+.sitenav{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1.75rem;
+  background: var(--nav-bg);
+  color: var(--nav-text);
+  border-bottom: 1px solid rgba(234,234,234,0.12);
+  backdrop-filter: blur(10px);
+}
+
+.sitenav__brand{
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  font-size: 1.05rem;
+  text-decoration: none;
+  color: var(--gray-100);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.sitenav__brand small{
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.sitenav__right{ display: flex; align-items: center; gap: 0.75rem; }
+
+.sitenav__links{
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sitenav__links a{
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  color: rgba(234,234,234,0.75);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.sitenav__links a:hover{
+  background: rgba(234,234,234,0.08);
+  color: var(--gray-100);
+}
+.sitenav__links a[aria-current="page"]{
+  background: var(--orange);
+  color: #1a0d00;
+  font-weight: 700;
+}
+
+.theme-toggle{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid rgba(234,234,234,0.2);
+  background: rgba(234,234,234,0.06);
+  color: var(--gray-100);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 0.25s ease, background 0.2s ease;
+}
+.theme-toggle:hover{ background: rgba(234,234,234,0.16); transform: rotate(15deg); }
+
+@media (max-width: 640px){
+  .sitenav{ padding: 0.8rem 1rem; }
+  .sitenav__links{ gap: 0; }
+  .sitenav__links a{ padding: 0.45rem 0.6rem; font-size: 0.78rem; }
+}
+
+/* ---------- Utilidades ---------- */
+.sr-only{
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+:focus-visible{
+  outline: 3px solid var(--orange);
+  outline-offset: 2px;
+}
+
+/* Scrollbars con estilo, para cualquier panel con overflow */
+*{
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+*::-webkit-scrollbar{ width: 10px; height: 10px; }
+*::-webkit-scrollbar-track{ background: var(--scrollbar-track); border-radius: 8px; }
+*::-webkit-scrollbar-thumb{
+  background: var(--scrollbar-thumb);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

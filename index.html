@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Medicina Veterinaria · Programa académico</title>
+<meta name="description" content="Sitio del programa: malla académica interactiva y más." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css" />
+<style>
+  .home-hero{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 5rem 1.75rem 2rem;
+    text-align: center;
+  }
+  .home-hero__eyebrow{
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--orange);
+  }
+  .home-hero h1{
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    margin: 0.6rem 0 1rem;
+    background: linear-gradient(100deg, var(--navy-dark) 10%, var(--navy) 45%, var(--green) 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  html[data-theme="dark"] .home-hero h1{
+    background: linear-gradient(100deg, #EAEAEA 10%, #7FD9C4 55%, var(--orange) 95%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  .home-hero p{
+    color: color-mix(in srgb, var(--ink) 70%, transparent);
+    line-height: 1.6;
+    max-width: 58ch;
+    margin: 0 auto;
+  }
+  .sections{
+    max-width: 1100px;
+    margin: 2rem auto 5rem;
+    padding: 0 1.75rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .section-card{
+    display: block;
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .section-card:hover{
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--orange);
+  }
+  .section-card__tag{
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+  }
+  .section-card h2{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: 0.4rem 0 0.5rem;
+    color: var(--ink);
+  }
+  .section-card p{
+    margin: 0;
+    color: color-mix(in srgb, var(--ink) 65%, transparent);
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .section-card--soon{
+    opacity: 0.55;
+    cursor: default;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb--navy"   style="width:520px;height:520px;top:-160px;left:-140px;"></div>
+<div class="orb orb--green"  style="width:460px;height:460px;top:22vh;right:-220px;"></div>
+<div class="orb orb--orange" style="width:420px;height:420px;bottom:-180px;left:20vw;"></div>
+
+<nav class="sitenav">
+  <a class="sitenav__brand" href="index.html">Med. Veterinaria <small>Programa académico</small></a>
+  <div class="sitenav__right">
+    <ul class="sitenav__links">
+      <li><a href="index.html" aria-current="page">Inicio</a></li>
+      <li><a href="malla-academica.html">Malla académica</a></li>
+    </ul>
+    <button class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro">🌙</button>
+  </div>
+</nav>
+
+<section class="home-hero">
+  <p class="home-hero__eyebrow">Programa de</p>
+  <h1>Medicina Veterinaria</h1>
+  <p>
+    Este sitio reúne, en secciones independientes, la información del programa:
+    empezamos con la malla académica interactiva y seguiremos sumando más
+    secciones aquí mismo.
+  </p>
+</section>
+
+<section class="sections">
+  <a class="section-card" href="malla-academica.html">
+    <span class="section-card__tag">Malla académica</span>
+    <h2>Malla académica</h2>
+    <p>Los 10 periodos del plan de estudios, con colores por periodo, tipo de curso y prerrequisitos interactivos al pasar el mouse.</p>
+  </a>
+
+  <a class="section-card" href="condicion-1.html">
+    <span class="section-card__tag">Sección</span>
+    <h2>Condición 1</h2>
+    <p>Página independiente, lista para su contenido.</p>
+  </a>
+  <a class="section-card" href="condicion-2.html">
+    <span class="section-card__tag">Sección</span>
+    <h2>Condición 2</h2>
+    <p>Página independiente, lista para su contenido.</p>
+  </a>
+  <a class="section-card" href="condicion-3.html">
+    <span class="section-card__tag">Sección</span>
+    <h2>Condición 3</h2>
+    <p>Página independiente, lista para su contenido.</p>
+  </a>
+  <a class="section-card" href="condicion-4.html">
+    <span class="section-card__tag">Sección</span>
+    <h2>Condición 4</h2>
+    <p>Página independiente, lista para su contenido.</p>
+  </a>
+  <a class="section-card" href="condicion-5.html">
+    <span class="section-card__tag">Sección</span>
+    <h2>Condición 5</h2>
+    <p>Página independiente, lista para su contenido.</p>
+  </a>
+  <a class="section-card" href="condicion-6.html">
+    <span class="section-card__tag">Sección</span>
+    <h2>Condición 6</h2>
+    <p>Página independiente, lista para su contenido.</p>
+  </a>
+  <a class="section-card" href="condicion-7.html">
+    <span class="section-card__tag">Sección</span>
+    <h2>Condición 7</h2>
+    <p>Página independiente, lista para su contenido.</p>
+  </a>
+  <a class="section-card" href="condicion-8.html">
+    <span class="section-card__tag">Sección</span>
+    <h2>Condición 8</h2>
+    <p>Página independiente, lista para su contenido.</p>
+  </a>
+</section>
+
+<!-- <section style="max-width:1100px;margin:0 auto 5rem;padding:0 1.75rem;">
+  <div class="cond-body__placeholder" style="border:1.5px dashed var(--line);border-radius:10px;padding:1.25rem 1.5rem;background:var(--paper-2);color:#52616a;font-size:0.88rem;line-height:1.6;">
+    <strong style="color:var(--navy-dark);">Para insertar cualquier sección en Canva o Genially:</strong>
+    copia su URL publicada y agrégale <code>?embed=1</code> al final
+    (ej. <code>tusitio.github.io/repo/condicion-1.html?embed=1</code>). Eso oculta el menú
+    del sitio para que se vea limpia dentro de tu diseño. Cada página vive en su propio
+    archivo, así que puedes editarlas por separado sin afectar a las demás.
+  </div>
+</section> -->
+
+<script src="js/theme.js"></script>
+</body>
+</html>
