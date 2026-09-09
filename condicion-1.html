@@ -1,51 +1,1393 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Condición 1 · Programa académico</title>
-<meta name="description" content="Condición 1 del programa." />
+<meta name="description" content="Condición 1 del programa de Medicina Veterinaria - UNAD" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css" />
-<link rel="stylesheet" href="css/condicion.css" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    unad: {
+                        teal: '#00445B',
+                        navy: '#01333F',
+                        green: '#035B3B',
+                        orange: '#D26714',
+                        base: '#EAEAEA',
+                        darkbg: '#0a1922'
+                    }
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    display: ['Montserrat', 'sans-serif'],
+                }
+            }
+        }
+    }
+</script>
+
+<!-- GSAP & Observer -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script>
+
+<!-- Iconify for Animated Icons -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+
+<style>
+    body {
+        background-color: #EAEAEA;
+        color: #01333F;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .dark body {
+        background-color: #0a1922;
+        color: #EAEAEA;
+    }
+
+    /* Textura de lienzo sutil */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+        opacity: 0.04;
+        mix-blend-mode: multiply;
+    }
+    .dark body::before {
+        opacity: 0.02;
+        mix-blend-mode: screen;
+    }
+
+    /* Orbes Ambientales Animados */
+    .orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(140px);
+        z-index: 0;
+        opacity: 0.6;
+        pointer-events: none;
+    }
+    .orb--navy {
+        background: #00445B;
+        animation: float1 20s ease-in-out infinite;
+    }
+    .orb--orange {
+        background: #D26714;
+        animation: float2 25s ease-in-out infinite reverse;
+        opacity: 0.4;
+    }
+
+    @keyframes float1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(5vw, 5vh) scale(1.1); } }
+    @keyframes float2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-5vw, -5vh) scale(1.1); } }
+
+    /* Estructura UI base */
+    .sitenav {
+        position: fixed;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 92%;
+        max-width: 1500px;
+        z-index: 50;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 1rem;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 20px rgba(1, 51, 63, 0.05);
+        transition: all 0.3s ease;
+    }
+    .dark .sitenav {
+        background: rgba(1, 51, 63, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .sitenav__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: #01333F;
+        text-decoration: none;
+    }
+    .dark .sitenav__brand { color: #ffffff; }
+    
+    .sitenav__brand small {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #00445B;
+    }
+    .dark .sitenav__brand small { color: #D26714; }
+
+    .sitenav__right { display: flex; align-items: center; gap: 1.5rem; }
+    .sitenav__links { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.875rem; font-weight: 600; }
+    .sitenav__links a { color: #01333F; text-decoration: none; transition: color 0.2s; }
+    .dark .sitenav__links a { color: #EAEAEA; }
+    .sitenav__links a:hover { color: #D26714; }
+    .sitenav__links a[aria-current="page"] { color: #D26714; border-bottom: 2px solid #D26714; padding-bottom: 2px; }
+
+    .theme-toggle {
+        background: none; border: none; cursor: pointer; font-size: 1.25rem;
+        display: flex; align-items: center; justify-content: center;
+        width: 36px; height: 36px; border-radius: 50%;
+        background-color: rgba(0,0,0,0.05); transition: background-color 0.2s;
+    }
+    .dark .theme-toggle { background-color: rgba(255,255,255,0.1); }
+
+    /* Slider Container & Glass Panels */
+    .slider-container { position: relative; width: 100vw; height: 100vh; z-index: 10; }
+    .slide {
+        position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+        visibility: hidden; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; padding: 5rem 2rem 2rem 2rem;
+    }
+
+    .glass-panel {
+        width: 100%;
+        max-width: 95vw;
+        height: 86vh;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 40px rgba(1, 51, 63, 0.08);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+    }
+    .dark .glass-panel {
+        background: rgba(1, 51, 63, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Scrollbars internos */
+    .custom-scroll { overflow-y: auto; overflow-x: hidden; padding-right: 10px; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(0,68,91,0.05); border-radius: 10px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0,68,91,0.2); border-radius: 10px; }
+    .dark .custom-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .dark .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+
+    /* Side Nav (Dots) */
+    .sidenav-dots {
+        position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+        z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 6px;
+        background: rgba(255,255,255,0.5); backdrop-filter: blur(8px);
+        padding: 10px 6px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3);
+        max-height: 80vh; overflow-y: auto;
+    }
+    .dark .sidenav-dots { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
+    .nav-btn { background: none; border: none; cursor: pointer; color: inherit; padding: 2px; display: flex; align-items: center; justify-content: center; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #00445B; opacity: 0.3; transition: all 0.3s; cursor: pointer; }
+    .dark .dot { background: #EAEAEA; }
+    .dot.active { opacity: 1; height: 18px; border-radius: 4px; background: #D26714; }
+
+    /* Tablas Estilizadas */
+    .styled-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+    .styled-table th { background-color: #00445B; color: white; padding: 12px; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; position: sticky; top: 0; z-index: 10; }
+    .styled-table td { padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); vertical-align: top; }
+    .dark .styled-table td { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .styled-table tr:hover td { background-color: rgba(0,68,91,0.03); }
+    .dark .styled-table tr:hover td { background-color: rgba(255,255,255,0.03); }
+
+    /* Tarjetas Interactivas con Efectos */
+    .hover-card { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s; }
+    .hover-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -8px rgba(0, 68, 91, 0.15); border-color: #D26714; }
+</style>
 </head>
 <body>
 
-<div class="orb orb--navy"   style="width:480px;height:480px;top:-160px;left:-140px;"></div>
+<div class="orb orb--navy" style="width:480px;height:480px;top:-160px;left:-140px;"></div>
 <div class="orb orb--orange" style="width:420px;height:420px;bottom:-180px;right:10vw;"></div>
 
-<nav class="sitenav">
-  <a class="sitenav__brand" href="index.html">Med. Veterinaria <small>Programa académico</small></a>
-  <div class="sitenav__right">
-    <ul class="sitenav__links">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="malla-academica.html">Malla académica</a></li>
-      <li><a href="condicion-1.html" aria-current="page">Condición 1</a></li>
-    </ul>
-    <button class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro">🌙</button>
-  </div>
+<nav class="sitenav" id="main-nav">
+    <a class="sitenav__brand" href="index.html">
+        <div class="w-10 h-10 rounded bg-unad-teal text-white flex items-center justify-center font-bold font-display shadow-md mr-1">MV</div>
+        <div>Med. Veterinaria <small>Programa académico</small></div>
+    </a>
+    <div class="sitenav__right">
+        <ul class="sitenav__links hidden md:flex">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="malla-academica.html">Malla académica</a></li>
+            <li><a href="condicion-1.html" aria-current="page">Condición 1</a></li>
+        </ul>
+        <button class="theme-toggle" id="theme-btn" type="button" aria-label="Cambiar a modo oscuro">🌙</button>
+    </div>
 </nav>
 
-<header class="cond-hero">
-  <p class="cond-hero__eyebrow">Sección independiente</p>
-  <h1>Condición 1</h1>
-  <p>Esta página es completamente independiente: tiene su propia URL y se puede insertar sola en Canva o Genially usando el enlace de embed (ver README).</p>
-</header>
+<aside class="sidenav-dots" id="side-nav">
+    <button class="nav-btn" id="btn-up" aria-label="Subir">
+        <span class="iconify text-unad-teal dark:text-white" data-icon="lucide:chevron-up" data-width="18"></span>
+    </button>
+    <div id="dot-container" class="flex flex-col gap-1.5 py-1"></div>
+    <button class="nav-btn" id="btn-down" aria-label="Bajar">
+        <span class="iconify text-unad-teal dark:text-white" data-icon="lucide:chevron-down" data-width="18"></span>
+    </button>
+</aside>
 
-<main class="cond-body">
-  <div class="cond-body__placeholder">
-    Aquí va el contenido de la <strong>Condición 1</strong>. Cuéntame qué debe llevar
-    (texto, tabla, checklist, imagen, video) y lo reemplazo por el diseño final —
-    este bloque es solo un marcador de posición.
-    <br><br>
-    Enlace normal: <code>condicion-1.html</code><br>
-    Enlace para insertar (embed, sin menú): <code>condicion-1.html?embed=1</code>
-  </div>
+<main class="slider-container" id="slider">
+
+    <!-- Diapositiva 1: Portada -->
+    <section class="slide">
+        <div class="glass-panel items-center justify-center text-center">
+            <span class="gsap-reveal px-4 py-1.5 rounded-full bg-unad-orange text-white text-xs font-bold uppercase tracking-wider mb-6 flex items-center gap-2 shadow-sm">
+                <span class="iconify animate-pulse" data-icon="lucide:sparkles" data-width="16"></span> Sección independiente
+            </span>
+            <h1 class="gsap-reveal text-4xl md:text-6xl font-display font-bold text-unad-teal dark:text-white mb-8">Condición 1. Denominación del Programa</h1>
+            
+            <div class="gsap-reveal grid grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl text-left bg-white/60 dark:bg-black/40 p-8 rounded-2xl border border-unad-teal/10 shadow-sm w-full">
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:graduation-cap" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Programa:</span><span class="font-semibold text-base dark:text-gray-200">Medicina Veterinaria</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:award" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Nivel de formación:</span><span class="font-semibold text-base dark:text-gray-200">Pregrado Universitario</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-orange mt-1 shrink-0" data-icon="lucide:badge-check" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Título a otorgar:</span><span class="font-semibold text-base text-unad-teal dark:text-unad-orange">Médico(a) Veterinario(a)</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:school" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Escuela:</span><span class="font-semibold text-base dark:text-gray-200">ECAPMA</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:laptop" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Modalidad:</span><span class="font-semibold text-base dark:text-gray-200">Híbrida (Presencial-Virtual)</span></div>
+                </div>
+                <div class="col-span-2 md:col-span-1 flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:building-2" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Institución:</span><span class="font-semibold text-base dark:text-gray-200">UNAD</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 2: Equipo Curricular 1/2 (Perfiles 1 al 5) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-bounce" data-icon="lucide:users" data-width="32"></span>
+                    1. Equipo curricular (1/2)
+                </h2>
+                <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Perfiles 1 al 5</span>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex items-center justify-center">
+                <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-6 w-full">
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-teal shadow-md">
+                            <a href="docente1.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente1.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 1</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-teal shadow-md">
+                            <a href="docente2.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente2.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 2</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-orange shadow-md">
+                            <a href="docente3.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente3.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 3</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-teal shadow-md">
+                            <a href="docente4.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente4.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 4</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-teal shadow-md">
+                            <a href="docente5.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente5.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 5</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Evaluar idoneidad y trayectoria del equipo formulador del programa.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Hojas de vida (CvLAC) y soportes de experiencia disciplinar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 3: Equipo Curricular 2/2 (Perfiles 6 al 10) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-pulse" data-icon="lucide:users" data-width="32"></span>
+                    1. Equipo curricular (2/2)
+                </h2>
+                <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Perfiles 6 al 10</span>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex items-center justify-center">
+                <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-6 w-full">
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-teal shadow-md">
+                            <a href="docente6.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente6.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 6</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-teal shadow-md">
+                            <a href="docente7.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente7.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 7</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-green shadow-md">
+                            <a href="docente8.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente8.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 8</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-teal shadow-md">
+                            <a href="docente9.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente9.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 9</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                    <div class="hover-card flex flex-col items-center bg-white/70 dark:bg-black/50 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 text-center">
+                        <div class="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 mb-3 overflow-hidden border-4 border-unad-teal shadow-md">
+                            <a href="docente10.png" target="_blank" rel="noopener" title="Ver foto completa"><img src="docente10.png" alt="Foto Perfil" class="w-full h-full object-cover"></a>
+                        </div>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white mb-1">Perfil Académico 10</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 italic">(fotos y perfil por whatsapp)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Evaluar idoneidad y trayectoria del equipo formulador del programa.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Hojas de vida (CvLAC) y soportes de experiencia disciplinar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 4: Naturaleza de la Denominación (Parte 1) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-spin" data-icon="lucide:compass" data-width="32" style="animation-duration: 12s;"></span>
+                    Naturaleza de la Denominación (1/2)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex items-center text-gray-800 dark:text-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                    <div class="bg-white/60 dark:bg-black/40 p-8 rounded-2xl border-l-4 border-unad-teal hover-card flex flex-col items-start gap-4 h-full justify-center">
+                        <span class="iconify text-unad-teal" data-icon="lucide:check-circle" data-width="32"></span>
+                        <p class="text-base md:text-lg leading-relaxed">La denominación <strong>Medicina Veterinaria</strong> refleja de manera precisa la naturaleza disciplinar del programa, su nivel de formación universitaria y las competencias del futuro <strong>Médico(a) Veterinario(a)</strong>.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-8 rounded-2xl border-l-4 border-unad-orange hover-card flex flex-col items-start gap-4 h-full justify-center">
+                        <span class="iconify text-unad-orange" data-icon="lucide:file-text" data-width="32"></span>
+                        <p class="text-base md:text-lg leading-relaxed">Se encuentra alineada con la clasificación internacional <strong>CINE-F 2013 (Campo 0841: Veterinaria)</strong> y con la normativa colombiana de educación superior (<strong>Ley 30 de 1992</strong> y <strong>Decreto 1330 de 2019</strong>).</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia de la denominación con la naturaleza del programa.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Justificación epistémica y legal presentada en el Documento Maestro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 5: Naturaleza de la Denominación (Parte 2) y Mensaje Clave -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:target" data-width="32"></span>
+                    Naturaleza y Mensaje Clave (2/2)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-6 text-gray-800 dark:text-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-teal hover-card flex flex-col items-start gap-3 h-full">
+                        <span class="iconify text-unad-teal" data-icon="lucide:shield-plus" data-width="28"></span>
+                        <p class="text-sm md:text-base">Su objeto de estudio comprende la <strong>prevención, diagnóstico, tratamiento y control de enfermedades animales</strong>, así como la promoción de la <strong>salud animal, salud pública veterinaria, bienestar animal y sostenibilidad productiva</strong>.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-green hover-card flex flex-col items-start gap-3 h-full">
+                        <span class="iconify text-unad-green" data-icon="lucide:globe" data-width="28"></span>
+                        <p class="text-sm md:text-base">Mantiene coherencia con las tendencias globales de la profesión mediante la incorporación del enfoque <strong>One Health (Una Sola Salud)</strong>, que integra la salud animal, humana y ambiental.</p>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-navy to-unad-teal text-white p-6 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest text-unad-orange mb-2 flex items-center gap-2 justify-center">
+                        <span class="iconify animate-pulse" data-icon="lucide:star" data-width="16"></span> Mensaje clave para destacar en la diapositiva
+                    </p>
+                    <p class="font-medium text-base md:text-lg leading-relaxed text-center">
+                        La denominación Medicina Veterinaria identifica una profesión con reconocimiento nacional e internacional, orientada a la protección de la salud animal, la salud pública y el desarrollo sostenible desde el enfoque One Health.
+                    </p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia de la denominación con la naturaleza del programa.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Justificación epistémica y legal presentada en el Documento Maestro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 6: Tabla 1.1 Alineación taxonómica -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:table" data-width="28"></span>
+                    Tabla 1.1 Alineación taxonómica y legal de la denominación del programa
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                <table class="styled-table w-full">
+                    <thead>
+                        <tr>
+                            <th class="w-1/5">Criterio de Clasificación</th>
+                            <th class="w-1/5">Registro / Código</th>
+                            <th>Sustentación Académica y Legal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-800 dark:text-gray-200">
+                        <tr>
+                            <td class="font-bold">Denominación Pura</td>
+                            <td class="font-medium text-unad-teal dark:text-unad-orange">Medicina Veterinaria</td>
+                            <td>Corresponde a una denominación disciplinar específica reconocida nacional e internacionalmente, orientada al estudio, prevención, diagnóstico, tratamiento y control de las enfermedades animales, así como a la protección de la salud pública veterinaria y el bienestar animal. Su alcance se articula con el enfoque <strong>One Health (Una Sola Salud)</strong>, el cual reconoce la interdependencia entre la salud animal, humana y ambiental (OMS, FAO, PNUMA y OMSA, 2022; OMSA, 2024).</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Nivel de Formación</td>
+                            <td>Pregrado Universitario</td>
+                            <td>Corresponde al nivel profesional definido en el Artículo 11 de la Ley 30 de 1992, orientado a la formación integral para el ejercicio autónomo de una profesión regulada, con competencias científicas, técnicas y éticas.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Título a Otorgar</td>
+                            <td>Médico(a) Veterinario(a)</td>
+                            <td>El título mantiene correspondencia directa, unívoca y coherente con la denominación del programa y con las competencias profesionales que desarrolla. Su ejercicio se encuentra enmarcado por las disposiciones éticas y deontológicas establecidas en la <strong>Ley 576 de 2000</strong> (Congreso de Colombia, 2000).</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Clasificación CINE-F 2013</td>
+                            <td><strong>Campo específico</strong>: 0841 (Veterinaria)</td>
+                            <td>La denominación se clasifica en el campo específico <strong>0841 Veterinaria</strong> de la <strong>Clasificación Internacional Normalizada de la Educación (CINE-F 2013)</strong>, adoptada por Colombia para fines estadísticos y de aseguramiento de calidad (UNESCO, 2015; DANE, 2023).</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Clasificación CUOC (2022)</td>
+                            <td><strong>Código de Ocupación</strong>: 22500</td>
+                            <td>El programa se asocia a la ocupación <strong>22500 - Veterinarios</strong>, establecida en la <strong>Clasificación Única de Ocupaciones para Colombia (CUOC)</strong>, facilitando su reconocimiento en el mercado laboral nacional (DANE, 2022).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="gsap-reveal text-[10px] text-gray-500 mt-2 shrink-0">Fuente: Elaboración propia, Programa de Medicina Veterinaria UNAD, 2026.</p>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Alineación legal y taxonómica de la denominación (SNIES, CINE, CUOC).</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Análisis detallado en Tabla 1.1 y normatividad vigente aplicada.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 7: Reconocimiento Global (Parte 1) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:globe-2" data-width="32"></span>
+                    Reconocimiento Global (1/2)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex items-center text-gray-800 dark:text-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-teal hover-card flex flex-col items-start gap-3 h-full">
+                        <span class="iconify text-unad-teal" data-icon="lucide:award" data-width="28"></span>
+                        <p class="text-sm md:text-base">La <strong>Medicina Veterinaria</strong> es una disciplina consolidada internacionalmente, fundamental para la <strong>salud animal, la salud pública, la seguridad alimentaria y la sostenibilidad ambiental</strong>.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-orange hover-card flex flex-col items-start gap-3 h-full">
+                        <span class="iconify text-unad-orange" data-icon="lucide:graduation-cap" data-width="28"></span>
+                        <p class="text-sm md:text-base">Universidades líderes en América y Europa utilizan denominaciones equivalentes (<em>Veterinary Medicine</em>, <em>DVM</em>, <em>Veterinary Science</em>), lo que facilita la <strong>comparabilidad académica, el reconocimiento profesional y la movilidad internacional</strong>.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-green hover-card flex flex-col items-start gap-3 h-full">
+                        <span class="iconify text-unad-green" data-icon="lucide:activity" data-width="28"></span>
+                        <p class="text-sm md:text-base">Su papel estratégico se fortalece a través del enfoque <strong>One Health (Una Sola Salud)</strong>, que integra la <strong>salud humana, animal y ambiental</strong> para abordar desafíos sanitarios globales.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Sintonía de la denominación con tendencias globales.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Integración del modelo One Health y ODS.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 8: Reconocimiento Global (Parte 2) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:trending-up" data-width="32"></span>
+                    Reconocimiento Global e Impacto (2/2)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col md:flex-row gap-8 pr-2 items-center justify-center">
+                <div class="w-full md:w-3/5 text-sm md:text-base space-y-3 text-gray-800 dark:text-gray-200">
+                    <ul class="list-disc pl-5 space-y-3">
+                        <li>Los médicos veterinarios contribuyen a la <strong>prevención de zoonosis, vigilancia epidemiológica, inocuidad alimentaria, control de la resistencia antimicrobiana y gestión de riesgos sanitarios</strong>.</li>
+                        <li>La disciplina aporta directamente al cumplimiento de los <strong>Objetivos de Desarrollo Sostenible (ODS)</strong>, especialmente en salud y bienestar, hambre cero y producción responsable.</li>
+                        <li>El programa de <strong>Medicina Veterinaria de la UNAD</strong> está alineado con estándares internacionales, fortaleciendo la calidad académica y la cooperación global.</li>
+                        <li>La denominación refleja una formación orientada a la solución de los desafíos <strong>sanitarios, ambientales, sociales y productivos</strong> del mundo contemporáneo.</li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-2/5 flex items-center justify-center">
+                    <a href="DiagrameEnfoque.png" target="_blank" rel="noopener" class="block w-full min-h-[260px] rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 hover-card cursor-zoom-in" title="Abrir imagen en tamaño completo">
+                        <img src="DiagrameEnfoque.png" alt="Gráfico Reconocimiento Global" class="w-full h-full object-cover">
+                    </a>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Sintonía de la denominación con tendencias globales.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Integración del modelo One Health y ODS.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 9: Tradición Nacional de la Denominación -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-pulse" data-icon="lucide:landmark" data-width="32"></span>
+                    Tradición Nacional de la Denominación
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal text-sm pr-4 text-gray-800 dark:text-gray-200 flex items-center justify-center">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full mx-auto">
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-teal hover-card h-full flex flex-col justify-center gap-2">
+                        <h3 class="font-bold text-unad-teal dark:text-unad-orange mb-1 flex items-center gap-2 text-base"><span class="iconify" data-icon="lucide:award" data-width="24"></span> Reconocimiento SNIES</h3>
+                        <p>La <strong>Medicina Veterinaria</strong> es una denominación ampliamente reconocida en la educación superior colombiana, respaldada por el marco normativo y 15 programas activos en el país.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-orange hover-card h-full flex flex-col justify-center gap-2">
+                        <h3 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-base"><span class="iconify" data-icon="lucide:cpu" data-width="24"></span> Innovación Híbrida</h3>
+                        <p>La <strong>UNAD innova</strong> con una modalidad <strong>híbrida (presencial-virtual)</strong>, ampliando el acceso a la formación veterinaria en territorios rurales y regiones con limitada oferta.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-green hover-card h-full flex flex-col justify-center gap-2">
+                        <h3 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-base"><span class="iconify" data-icon="lucide:git-pull-request" data-width="24"></span> Cierre de Brechas</h3>
+                        <p>Contribuye al <strong>cierre de brechas regionales</strong> y al fortalecimiento del talento humano para los sectores pecuario, sanitario y de salud pública veterinaria.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-navy dark:border-gray-400 hover-card h-full flex flex-col justify-center gap-2">
+                        <h3 class="font-bold text-unad-navy dark:text-white mb-1 flex items-center gap-2 text-base"><span class="iconify" data-icon="lucide:compass" data-width="24"></span> Pertinencia Territorial</h3>
+                        <p>Fortalece la <strong>pertinencia social, académica y profesional</strong> articulada mediante el Núcleo Integrador de Problema (NIP).</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Justificación de la modalidad híbrida frente a la tradición nacional.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Articulación territorial y cierre de brechas sustentado en el diseño.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 10: Programas Activos en Colombia (SNIES) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:list-ordered" data-width="28"></span>
+                    Programas Activos de Medicina Veterinaria en Colombia (SNIES)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                <table class="styled-table w-full text-xs">
+                    <thead>
+                        <tr>
+                            <th>NOMBRE INSTITUCIÓN</th>
+                            <th>ESTADO</th>
+                            <th>RECONOCIMIENTO DEL MINISTERIO</th>
+                            <th>MODALIDAD</th>
+                            <th>MUNICIPIO OFERTA</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-800 dark:text-gray-200">
+                        <tr><td>UNIVERSIDAD NACIONAL DE COLOMBIA</td><td>Activa</td><td>Acreditación de alta calidad</td><td>Presencial</td><td>Bogotá, D.C.</td></tr>
+                        <tr><td>UNIVERSIDAD DE ANTIOQUIA</td><td>Activa</td><td>Acreditación de alta calidad</td><td>Presencial</td><td>Medellín</td></tr>
+                        <tr><td>UNIVERSIDAD DE NARIÑO</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Pasto</td></tr>
+                        <tr><td>UNIVERSIDAD DE PAMPLONA</td><td>Activa</td><td>Acreditación de alta calidad</td><td>Presencial</td><td>Pamplona</td></tr>
+                        <tr><td>UNIVERSIDAD DE LA SALLE</td><td>Activa</td><td>Acreditación de alta calidad</td><td>Presencial</td><td>Bogotá, D.C.</td></tr>
+                        <tr><td>UNIVERSIDAD SANTIAGO DE CALI</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Santiago de Cali</td></tr>
+                        <tr><td>UNIVERSIDAD ANTONIO NARIÑO</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Bogotá, D.C. / Popayán</td></tr>
+                        <tr><td>UNIVERSIDAD DE CIENCIAS APLICADAS Y AMBIENTALES - UDCA</td><td>Activa</td><td>Acreditación de alta calidad</td><td>Presencial</td><td>Bogotá, D.C.</td></tr>
+                        <tr><td>FUNDACION UNIVERSITARIA JUAN DE CASTELLANOS</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Tunja</td></tr>
+                        <tr><td>FUNDACION UNIVERSITARIA AGRARIA DE COLOMBIA -UNIAGRARIA-</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Bogotá, D.C.</td></tr>
+                        <tr><td>CORPORACION UNIVERSITARIA DE SANTA ROSA DE CABAL-UNISARC-</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Santa Rosa de Cabal</td></tr>
+                        <tr><td>CORPORACION UNIVERSITARIA LASALLISTA</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Caldas</td></tr>
+                        <tr><td>UNIVERSIDAD DE SANTANDER - UDES</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Bucaramanga</td></tr>
+                        <tr><td>UNIVERSIDAD INDUSTRIAL DE SANTANDER</td><td>Activa</td><td>Registro calificado</td><td>Presencial</td><td>Málaga, Santander</td></tr>
+                        <tr><td>CORPORACION UNIVERSITARIA REMINGTON</td><td>Activa</td><td>Acreditación de alta calidad</td><td>Presencial</td><td>Medellín, Montería. Ibagué, Rio Negro</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Revisión del panorama nacional de la disciplina.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Consulta y reporte oficial del Sistema SNIES.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 11: Tabla 1.3 Matriz de Consistencia (Parte 1) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:layout-grid" data-width="28"></span>
+                    Tabla 1.3 Matriz de Consistencia (Parte 1: Ciencias y Simulación)
+                </h2>
+                <span class="bg-unad-orange text-white px-3 py-1 text-xs rounded-full font-bold uppercase">Modalidad Híbrida</span>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col gap-6 justify-center">
+                <div class="bg-white/80 dark:bg-black/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card">
+                    <div class="bg-unad-teal text-white px-5 py-3 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:flask-conical" data-width="20"></span>
+                        <h3 class="font-bold text-base">Ciencias Básicas y Teóricas</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Enfoque Tradicional Nacional (Presencial)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Desarrollo de clases magistrales y actividades académicas en aulas físicas.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-orange uppercase tracking-wider mb-2">Innovación de la Modalidad UNAD (Híbrida)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Mediación pedagógica mediante Campus Virtual y Ambientes Virtuales de Aprendizaje (AVA), complementada con encuentros sincrónicos y aprendizaje autónomo.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-green uppercase tracking-wider mb-2">Mecanismo de Aseguramiento de Calidad (CONACES)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Favorece el aprendizaje autónomo, el pensamiento crítico, la gestión del conocimiento y la flexibilidad académica en regiones.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white/80 dark:bg-black/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card">
+                    <div class="bg-unad-teal text-white px-5 py-3 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:microscope" data-width="20"></span>
+                        <h3 class="font-bold text-base">Simulación y Preclínica</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Enfoque Tradicional Nacional (Presencial)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Uso de laboratorios físicos institucionales para el desarrollo de prácticas básicas.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-orange uppercase tracking-wider mb-2">Innovación de la Modalidad UNAD (Híbrida)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Integración de laboratorios virtuales, simuladores especializados, recursos digitales interactivos y herramientas de realidad aumentada.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-green uppercase tracking-wider mb-2">Mecanismo de Aseguramiento de Calidad (CONACES)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Permite fortalecer habilidades analíticas y toma de decisiones antes de la interacción directa con animales, reduciendo errores.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="gsap-reveal text-[10px] text-gray-500 mt-2 shrink-0">Fuente: Elaboración propia, Programa de Medicina Veterinaria UNAD, 2026.</p>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Evaluar viabilidad y calidad de la estrategia híbrida.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Matriz metodológica que responde a exigencias de CONACES.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 12: Tabla 1.3 Matriz de Consistencia (Parte 2) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-pulse" data-icon="lucide:layout-grid" data-width="28"></span>
+                    Tabla 1.3 Matriz de Consistencia (Parte 2: Práctica y Territorio)
+                </h2>
+                <span class="bg-unad-orange text-white px-3 py-1 text-xs rounded-full font-bold uppercase">Modalidad Híbrida</span>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col gap-6 justify-center">
+                <div class="bg-white/80 dark:bg-black/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card">
+                    <div class="bg-unad-teal text-white px-5 py-3 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:stethoscope" data-width="20"></span>
+                        <h3 class="font-bold text-base">Práctica Clínica y Cirugía</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Enfoque Tradicional Nacional (Presencial)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Desarrollo de prácticas en hospitales veterinarios universitarios y centros clínicos en sedes principales.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-orange uppercase tracking-wider mb-2">Innovación de la Modalidad UNAD (Híbrida)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Implementación de prácticas presenciales obligatorias en Centros de Atención e Innovación Territorial (CAIT), centros especializados y convenios sectoriales.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-green uppercase tracking-wider mb-2">Mecanismo de Aseguramiento de Calidad (CONACES)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Garantiza el desarrollo de competencias clínicas y procedimentales en escenarios reales y cumplimiento de resultados de aprendizaje.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white/80 dark:bg-black/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card">
+                    <div class="bg-unad-teal text-white px-5 py-3 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:map" data-width="20"></span>
+                        <h3 class="font-bold text-base">Interacción con el Sector Productivo</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Enfoque Tradicional Nacional (Presencial)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Vinculación principalmente a través de prácticas concentradas en el área de influencia institucional.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-orange uppercase tracking-wider mb-2">Innovación de la Modalidad UNAD (Híbrida)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Articulación con redes territoriales, sistemas productivos regionales y entidades públicas y privadas en todo el país.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-green uppercase tracking-wider mb-2">Mecanismo de Aseguramiento de Calidad (CONACES)</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Fortalece la pertinencia regional, el conocimiento de dinámicas productivas locales y capacidad de intervención.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="gsap-reveal text-[10px] text-gray-500 mt-2 shrink-0">Fuente: Elaboración propia, Programa de Medicina Veterinaria UNAD, 2026.</p>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Evaluar viabilidad y calidad de la estrategia híbrida.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Matriz metodológica que responde a exigencias de CONACES.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 13: Núcleos Problémicos - Introducción -->
+    <section class="slide">
+        <div class="glass-panel items-center justify-center text-center">
+            <span class="gsap-reveal px-4 py-1.5 rounded-full bg-unad-teal text-white text-xs font-bold uppercase tracking-wider mb-6 flex items-center gap-2 shadow-sm mx-auto">
+                <span class="iconify animate-bounce" data-icon="lucide:layers" data-width="16"></span> Estructura Curricular
+            </span>
+            <h2 class="gsap-reveal text-3xl md:text-5xl font-display font-bold text-unad-navy dark:text-white mb-6">Núcleos Problémicos (NP) del Programa</h2>
+            <div class="gsap-reveal max-w-4xl text-base md:text-lg text-gray-800 dark:text-gray-200 bg-white/60 dark:bg-black/40 p-8 rounded-2xl border border-unad-teal/20 shadow-sm leading-relaxed">
+                A partir del análisis del estudio de mercado, de las necesidades del sector veterinario y agropecuario, de las tendencias nacionales en salud animal y de la experiencia institucional de la UNAD, se definieron dos (2) Núcleos Problémicos (NP) que orientan la formación del programa y articulan de manera coherente la denominación, el perfil del egresado, los contenidos curriculares y los campos de actuación profesional.
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-8 w-full shrink-0 gsap-reveal max-w-4xl">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg text-left">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia de la estructura curricular y los RAPs.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg text-left">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Definición clara de 2 NPs que engloban los 6 RAPs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 14: NP 1 y RAPs 1-2 -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-teal dark:text-unad-orange flex items-center gap-3">
+                    <span class="iconify animate-pulse" data-icon="lucide:activity" data-width="32"></span>
+                    NP 1. Salud animal y RAPs (1/2)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-5 pr-2">
+                <div class="bg-white/70 dark:bg-black/40 border-t-4 border-unad-teal p-6 rounded-xl shadow-sm hover-card flex items-start gap-4">
+                    <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:dna" data-width="28"></span>
+                    <div>
+                        <h3 class="font-bold text-unad-teal dark:text-white text-lg mb-2">NP 1. Salud animal: fundamentos biológicos, diagnóstico y atención veterinaria.</h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">Este núcleo problémico surge de la necesidad de comprender los procesos biológicos, fisiológicos y patológicos que determinan la salud y la enfermedad en los animales, con el fin de fortalecer las competencias profesionales relacionadas con la prevención, diagnóstico, tratamiento y atención veterinaria integral.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-xl border-l-4 border-unad-teal hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:microscope" data-width="24"></span>
+                        <div>
+                            <span class="font-bold text-xs text-unad-teal uppercase tracking-wider block mb-1">RAP 1</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Analizar la organización estructural y funcional de los organismos animales para interpretar los procesos biológicos, fisiológicos e inmunológicos asociados al mantenimiento de la salud animal.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-xl border-l-4 border-unad-teal hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:shield-alert" data-width="24"></span>
+                        <div>
+                            <span class="font-bold text-xs text-unad-teal uppercase tracking-wider block mb-1">RAP 2</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Analizar los mecanismos etiológicos, fisiopatológicos e inmunológicos involucrados en la presentación de enfermedades animales para interpretar sus manifestaciones clínicas, diagnósticas y epidemiológicas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia de la estructura curricular y los RAPs.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Definición clara de RAPs asociados al NP1.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 15: NP 1 y RAPs 3-4 -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-teal dark:text-unad-orange flex items-center gap-3">
+                    <span class="iconify animate-pulse" data-icon="lucide:stethoscope" data-width="32"></span>
+                    NP 1. Atención Veterinaria y RAPs (2/2)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-5 pr-2">
+                <div class="bg-white/70 dark:bg-black/40 border-t-4 border-unad-teal p-6 rounded-xl shadow-sm hover-card flex items-start gap-4">
+                    <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:stethoscope" data-width="28"></span>
+                    <div>
+                        <h3 class="font-bold text-unad-teal dark:text-white text-lg mb-2">Continuidad NP 1: Práctica y Soporte Clínico</h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">Su abordaje contribuye al bienestar animal, al control de enfermedades y al desarrollo de intervenciones clínicas y sanitarias basadas en conocimiento científico en los diferentes contextos de desempeño.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-xl border-l-4 border-unad-teal hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:search" data-width="24"></span>
+                        <div>
+                            <span class="font-bold text-xs text-unad-teal uppercase tracking-wider block mb-1">RAP 3</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Evaluar la información obtenida mediante la anamnesis, el examen clínico y las ayudas diagnósticas para sustentar hipótesis diagnósticas en diferentes contextos de la práctica veterinaria.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-xl border-l-4 border-unad-teal hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:clipboard-check" data-width="24"></span>
+                        <div>
+                            <span class="font-bold text-xs text-unad-teal uppercase tracking-wider block mb-1">RAP 4</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Integrar la evidencia clínica, diagnóstica y científica para sustentar decisiones orientadas a la prevención, el diagnóstico, el tratamiento y el seguimiento de enfermedades en diferentes especies animales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia de la estructura curricular y los RAPs.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Definición clara de RAPs asociados al NP1.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 16: NP 2 y RAPs 5-6 -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-green dark:text-emerald-400 flex items-center gap-3">
+                    <span class="iconify animate-pulse" data-icon="lucide:globe" data-width="32"></span>
+                    NP 2. Salud poblacional, producción y sostenibilidad (One Health)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-5 pr-2">
+                <div class="bg-white/70 dark:bg-black/40 border-t-4 border-unad-green p-6 rounded-xl shadow-sm hover-card flex items-start gap-4">
+                    <span class="iconify text-unad-green shrink-0 mt-1" data-icon="lucide:globe" data-width="28"></span>
+                    <div>
+                        <h3 class="font-bold text-unad-green dark:text-emerald-400 text-lg mb-2">NP 2. Salud poblacional, producción y sostenibilidad desde el enfoque One Health.</h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">Este núcleo surge de la necesidad de comprender las dinámicas que afectan la salud de las poblaciones animales, los sistemas de producción y su interacción con la salud humana y ambiental. Integra epidemiología, producción sostenible, seguridad alimentaria y salud pública veterinaria.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-xl border-l-4 border-unad-green hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-green shrink-0 mt-1" data-icon="lucide:map-pin" data-width="24"></span>
+                        <div>
+                            <span class="font-bold text-xs text-unad-green uppercase tracking-wider block mb-1">RAP 5</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Interpretar información epidemiológica, sanitaria y ambiental para identificar factores de riesgo asociados a la ocurrencia y transmisión de enfermedades animales y zoonóticas en poblaciones animales, en el contexto de la salud pública veterinaria.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-xl border-l-4 border-unad-green hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-green shrink-0 mt-1" data-icon="lucide:leaf" data-width="24"></span>
+                        <div>
+                            <span class="font-bold text-xs text-unad-green uppercase tracking-wider block mb-1">RAP 6</span>
+                            <p class="text-sm text-gray-800 dark:text-gray-200">Evaluar los factores nutricionales, genéticos, reproductivos y de bienestar animal asociados a los sistemas de producción animal para sustentar decisiones orientadas a su sostenibilidad, eficiencia y bienestar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia de la estructura curricular y los RAPs.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Definición clara de RAPs asociados al NP2.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 17: Núcleo Integrador del Problema (NIP) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex flex-col items-center justify-center border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0 text-center">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 flex items-center gap-2">
+                    <span class="iconify text-unad-orange" data-icon="lucide:anchor" data-width="16"></span> Núcleo Integrador del Problema (NIP)
+                </span>
+                <h2 class="text-xl md:text-2xl font-display font-bold text-unad-navy dark:text-white max-w-4xl italic">"Gestión integral de la salud, el bienestar y la producción animal para el desarrollo sostenible y la salud pública en los territorios"</h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col md:flex-row gap-6 pr-2 items-stretch justify-center">
+                <div class="w-full md:w-3/5 flex flex-col gap-3 text-sm text-gray-800 dark:text-gray-200 justify-center">
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-teal hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-0.5" data-icon="lucide:stethoscope" data-width="20"></span>
+                        <p>Responde a la necesidad de formar médicos veterinarios capaces de intervenir en problemáticas de <strong>salud animal, bienestar, producción pecuaria y salud pública</strong>.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-orange hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-orange shrink-0 mt-0.5" data-icon="lucide:alert-triangle" data-width="20"></span>
+                        <p>Aborda desafíos nacionales relacionados con: <em>enfermedades zoonóticas, vigilancia epidemiológica, inocuidad alimentaria y sostenibilidad productiva</em>.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-green hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-green shrink-0 mt-0.5" data-icon="lucide:globe" data-width="20"></span>
+                        <p>Se fundamenta en el enfoque <strong>Una Sola Salud (One Health)</strong>, integrando salud humana, animal y ambiental.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-navy dark:border-gray-400 hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-navy dark:text-white shrink-0 mt-0.5" data-icon="lucide:scale" data-width="20"></span>
+                        <p>Está alineado con el <strong>Marco Nacional de Cualificaciones</strong> y la normatividad en bienestar animal y sanidad agropecuaria.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-teal hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-0.5" data-icon="lucide:git-branch" data-width="20"></span>
+                        <div>
+                            <p class="mb-1">Integra dos ejes principales:</p>
+                            <ol class="list-decimal pl-5 space-y-0.5 font-semibold text-unad-teal dark:text-unad-orange">
+                                <li>Salud animal, bienestar y salud pública veterinaria.</li>
+                                <li>Producción animal sostenible y sanidad en interacción con el territorio.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-2/5 flex items-center">
+                    <div class="bg-unad-orange text-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-white/20 w-full">
+                        <h3 class="font-bold text-sm mb-2 flex items-center gap-2 border-b border-white/20 pb-2 uppercase tracking-wide">
+                            <span class="iconify" data-icon="lucide:lightbulb" data-width="18"></span> Idea Clave
+                        </h3>
+                        <p class="italic text-sm leading-relaxed font-medium">"El NIP articula salud animal, salud pública, producción sostenible y bienestar animal desde el enfoque One Health, contribuyendo al desarrollo sostenible de los territorios."</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Validar pertinencia territorial y disciplinar del Núcleo Integrador.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Formulación explícita del NIP alineado a tendencias globales y país.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 18: Correspondencia Perfil del Egresado -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:user-check" data-width="32"></span>
+                    Correspondencia entre Denominación y Perfil del Egresado
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col md:flex-row gap-6 pr-2 items-stretch justify-center">
+                <div class="w-full md:w-3/5 flex flex-col gap-3 text-sm text-gray-800 dark:text-gray-200 justify-center">
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-teal hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-0.5" data-icon="lucide:badge-check" data-width="20"></span>
+                        <p>La denominación <strong>Medicina Veterinaria</strong> refleja una formación integral alineada con las necesidades de los sectores agropecuario, sanitario y ambiental.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-orange hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-orange shrink-0 mt-0.5" data-icon="lucide:flask-conical" data-width="20"></span>
+                        <p>El egresado posee una sólida formación <strong>científica, tecnológica, ética y humanística</strong> para prevenir, diagnosticar, tratar y controlar problemas de salud y bienestar animal.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-green hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-green shrink-0 mt-0.5" data-icon="lucide:shield-check" data-width="20"></span>
+                        <p>Contribuye al fortalecimiento de los sistemas de producción animal mediante prácticas de <strong>bioseguridad, inocuidad alimentaria y gestión sanitaria</strong>.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-navy dark:border-gray-400 hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-navy dark:text-white shrink-0 mt-0.5" data-icon="lucide:globe" data-width="20"></span>
+                        <p>Desde el enfoque <strong>One Health</strong>, participa en la prevención y control de zoonosis, vigilancia epidemiológica y salud pública veterinaria.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-teal hover-card shadow-sm flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-0.5" data-icon="lucide:users" data-width="20"></span>
+                        <p>Se caracteriza por el <strong>pensamiento crítico, autonomía, responsabilidad ética, trabajo interdisciplinario y compromiso social</strong>.</p>
+                    </div>
+                </div>
+                <div class="w-full md:w-2/5 flex items-center">
+                    <div class="bg-unad-teal text-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-white/20 w-full">
+                        <h3 class="font-bold text-sm mb-2 flex items-center gap-2 border-b border-white/20 pb-2 uppercase tracking-wide">
+                            <span class="iconify" data-icon="lucide:quote" data-width="18"></span> Idea Central
+                        </h3>
+                        <p class="italic text-sm leading-relaxed font-medium">"El perfil del egresado materializa la denominación del programa al formar médicos veterinarios competentes para actuar en salud animal, salud pública y producción sostenible."</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia entre el título a otorgar y las competencias prometidas.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Diseño del Perfil de Egreso alineado con normativas profesionales.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 19: Análisis de Normatividad -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:scale" data-width="32"></span>
+                    1.5 Incidencia de la Normatividad en el Ejercicio Profesional
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-6 text-gray-800 dark:text-gray-200">
+                <p class="font-medium text-center max-w-3xl mx-auto text-sm md:text-base">El programa integra de manera transversal el marco <strong>ético, legal y técnico</strong> que regula la Medicina Veterinaria en Colombia:</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-teal hover-card flex flex-col items-start gap-2">
+                        <span class="iconify text-unad-teal" data-icon="lucide:file-check" data-width="28"></span>
+                        <h3 class="font-bold text-unad-teal dark:text-unad-orange text-base">Ley 576 de 2000</h3>
+                        <p class="text-sm">Orienta la formación en ética profesional, responsabilidad social y rigor científico.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-green hover-card flex flex-col items-start gap-2">
+                        <span class="iconify text-unad-green" data-icon="lucide:heart" data-width="28"></span>
+                        <h3 class="font-bold text-unad-green dark:text-emerald-400 text-base">Ley 1774 de 2016</h3>
+                        <p class="text-sm">Fortalece la protección y bienestar animal, reconociendo a los animales como seres sintientes.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-navy dark:border-gray-400 hover-card flex flex-col items-start gap-2">
+                        <span class="iconify text-unad-navy dark:text-white" data-icon="lucide:briefcase" data-width="28"></span>
+                        <h3 class="font-bold text-unad-navy dark:text-white text-base">Ley 1876 / Dec. 1071</h3>
+                        <p class="text-sm">Sustentan la formación en sanidad animal, producción pecuaria e inocuidad alimentaria.</p>
+                    </div>
+                </div>
+                <div class="bg-white/60 dark:bg-black/40 p-6 rounded-xl border-l-4 border-unad-orange max-w-4xl mx-auto w-full">
+                    <p class="text-sm md:text-base font-medium text-center">El programa desarrolla competencias para la gestión sanitaria, vigilancia epidemiológica y la interacción con entidades clave como el <strong>ICA</strong> y el <strong>MinSalud</strong>, preparando al egresado para actuar con <strong>criterio ético y cumplimiento normativo</strong>.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Conocimiento del marco regulatorio del ejercicio veterinario.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Incorporación de Leyes 576, 1774, 1876 y Decreto 1071 en currícula.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 20: Ficha Técnica (Parte 1) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-pulse" data-icon="lucide:file-spreadsheet" data-width="28"></span>
+                    1.6 Ficha Técnica de Identificación (1/2)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700 p-2">
+                <table class="styled-table w-full text-[11px] md:text-[12px]">
+                    <thead>
+                        <tr><th colspan="4" class="text-center text-sm bg-unad-navy text-white">IDENTIFICACIÓN GENERAL DEL PROGRAMA</th></tr>
+                    </thead>
+                    <tbody class="text-gray-800 dark:text-gray-200">
+                        <tr><td class="font-bold">Institución</td><td colspan="3">Universidad Nacional Abierta y a Distancia -- UNAD</td></tr>
+                        <tr><td class="font-bold w-1/4">Domicilio principal</td><td class="w-1/4">Calle 14 sur # 14 -- 23, Piso 5° Bogotá D.C.</td><td class="font-bold w-1/4">Teléfono institucional</td><td class="w-1/4">601 375 9500</td></tr>
+                        <tr><td colspan="4"><span class="font-bold">Nombre del programa:</span> Medicina Veterinaria</td></tr>
+                        <tr><td class="font-bold">Modalidad</td><td>Híbrida (presencial -- virtual)</td><td class="font-bold">Inclusión de tecnología:</td><td>Sí</td></tr>
+                        <tr><td colspan="4"><span class="font-bold">Título que otorga:</span> Médico(a) Veterinario(a)</td></tr>
+                        <tr><td class="font-bold">Nivel académico / formación</td><td colspan="3">Pregrado / Universitario</td></tr>
+                        <tr><td colspan="4"><span class="font-bold">Duración estimada:</span> 10 semestres</td></tr>
+                        <tr><td rowspan="2" class="font-bold align-middle">Campos de formación (CINE 2013)</td><td class="font-bold bg-gray-50 dark:bg-gray-800/50">Campo amplio</td><td colspan="2" class="bg-gray-50 dark:bg-gray-800/50">Agropecuario, Silvicultura, Pesca y Veterinaria</td></tr>
+                        <tr><td class="font-bold">Campo específico</td><td colspan="2">Veterinaria</td></tr>
+                        <tr><td colspan="4"><span class="font-bold">Periodicidad de admisión:</span> Semestral (16-1, 16-4)</td></tr>
+                        <tr><td colspan="4"><span class="font-bold">Cobertura del programa:</span> Nacional (en 8 centros)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar integridad de la información básica para registro.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Resumen consolidado en Ficha Técnica 1.6.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diapositiva 21: Ficha Técnica (Parte 2) -->
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:file-spreadsheet" data-width="28"></span>
+                    1.6 Ficha Técnica de Identificación (2/2)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700 p-2">
+                <table class="styled-table w-full text-[11px] md:text-[12px]">
+                    <thead>
+                        <tr><th colspan="4" class="text-center text-sm bg-unad-teal text-white">CRÉDITOS, PRÁCTICAS Y RESPONSABLES</th></tr>
+                    </thead>
+                    <tbody class="text-gray-800 dark:text-gray-200">
+                        <tr><td rowspan="3" class="font-bold align-middle">Créditos académicos (Total: 174)</td><td class="font-bold bg-gray-50 dark:bg-gray-800/50">Distribución</td><td class="font-bold bg-gray-50 dark:bg-gray-800/50">Cantidad</td><td class="font-bold bg-gray-50 dark:bg-gray-800/50">%</td></tr>
+                        <tr><td>Créditos obligatorios</td><td>151</td><td>87%</td></tr>
+                        <tr><td>Créditos electivos</td><td>23</td><td>13%</td></tr>
+                        <tr><td class="font-bold">Requisito segunda lengua</td><td>No</td><td colspan="2"><strong>Idioma:</strong> Inglés | <strong>Nivel:</strong> B1</td></tr>
+                        <tr><td colspan="4"><span class="font-bold">Escenario de práctica:</span> Sí | <strong>Estudiantes 1er semestre:</strong> 30</td></tr>
+                        <tr><td colspan="4"><span class="font-bold">Escuela:</span> Escuela de Ciencias Agrícolas, Pecuarias y del Medio Ambiente - ECAPMA</td></tr>
+                        <tr><td class="font-bold">Decano de la Escuela</td><td>Jordano Salamanca Bastidas</td><td class="font-bold">Correo escuela</td><td>Escuela.agricolas@unad.edu.co</td></tr>
+                        <tr><td colspan="4"><span class="font-bold">Líder Nacional del Programa:</span> Viviana Vanadia Villamil Reyes</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar integridad de la información básica para registro.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Resumen consolidado en Ficha Técnica 1.6.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </main>
 
-<script src="js/embed-mode.js"></script>
-<script src="js/theme.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const isEmbed = urlParams.get('embed') === '1';
+    
+    if (isEmbed) {
+        const nav = document.getElementById('main-nav');
+        const sideNav = document.getElementById('side-nav');
+        if (nav) nav.style.display = 'none';
+        if (sideNav) sideNav.style.display = 'none';
+        document.querySelectorAll('.slide').forEach(s => {
+            s.style.paddingTop = '1.5rem';
+        });
+    }
+
+    const themeBtn = document.getElementById('theme-btn');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            themeBtn.innerHTML = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+        });
+    }
+
+    gsap.registerPlugin(Observer);
+
+    const slides = document.querySelectorAll('.slide');
+    const dotContainer = document.getElementById('dot-container');
+    let currentIndex = 0;
+    let isAnimating = false;
+
+    if (!isEmbed && dotContainer) {
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.addEventListener('click', () => gotoSlide(i, i > currentIndex ? 1 : -1));
+            dotContainer.appendChild(dot);
+        });
+    }
+    const dots = document.querySelectorAll('.dot');
+
+    function updateDots() {
+        if(isEmbed) return;
+        dots.forEach((dot, i) => {
+            if (i === currentIndex) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+    }
+
+    gsap.set(slides, { yPercent: 100, autoAlpha: 0 });
+    gsap.set(slides[0], { yPercent: 0, autoAlpha: 1 });
+    updateDots();
+    animateElementsIn(slides[0]);
+
+    function animateElementsIn(slide) {
+        const elements = slide.querySelectorAll('.gsap-reveal');
+        if(elements.length > 0) {
+            gsap.fromTo(elements,
+                { y: 30, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.06, ease: "power3.out", overwrite: "auto", delay: 0.05 }
+            );
+        }
+    }
+
+    function gotoSlide(index, direction) {
+        if (isAnimating || index < 0 || index >= slides.length || index === currentIndex) return;
+        isAnimating = true;
+
+        const currentSlide = slides[currentIndex];
+        const nextSlide = slides[index];
+
+        const yPercentOut = direction === 1 ? -100 : 100;
+        const yPercentIn = direction === 1 ? 100 : -100;
+
+        gsap.set(nextSlide, { yPercent: yPercentIn, autoAlpha: 1 });
+
+        const tl = gsap.timeline({
+            defaults: { duration: 0.7, ease: "power4.inOut" },
+            onComplete: () => {
+                gsap.set(currentSlide, { autoAlpha: 0 });
+                currentIndex = index;
+                updateDots();
+                isAnimating = false;
+            }
+        });
+
+        tl.to(currentSlide, { yPercent: yPercentOut })
+          .to(nextSlide, { yPercent: 0 }, "<");
+
+        animateElementsIn(nextSlide);
+    }
+
+    Observer.create({
+        type: "wheel,touch,pointer",
+        wheelSpeed: -1,
+        tolerance: 40,
+        preventDefault: false,
+        onDown: () => gotoSlide(currentIndex - 1, -1),
+        onUp: () => gotoSlide(currentIndex + 1, 1),
+    });
+
+    document.querySelectorAll('.custom-scroll').forEach(el => {
+        el.addEventListener('wheel', (e) => {
+            const isAtTop = el.scrollTop === 0;
+            const isAtBottom = Math.abs((el.scrollHeight - el.scrollTop) - el.clientHeight) < 2;
+
+            if ((e.deltaY < 0 && !isAtTop) || (e.deltaY > 0 && !isAtBottom)) {
+                e.stopPropagation();
+            }
+        }, {passive: false});
+        
+        el.addEventListener('touchmove', (e) => {
+            e.stopPropagation(); 
+        }, {passive: false});
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+            e.preventDefault();
+            gotoSlide(currentIndex + 1, 1);
+        } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault();
+            gotoSlide(currentIndex - 1, -1);
+        }
+    });
+
+    if(!isEmbed) {
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        if(btnUp) btnUp.addEventListener('click', () => gotoSlide(currentIndex - 1, -1));
+        if(btnDown) btnDown.addEventListener('click', () => gotoSlide(currentIndex + 1, 1));
+    }
+</script>
 </body>
 </html>
