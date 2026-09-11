@@ -1,15 +1,701 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Malla académica · Medicina Veterinaria</title>
 <meta name="description" content="Malla académica interactiva del programa de Medicina Veterinaria." />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css" />
-<link rel="stylesheet" href="css/malla.css" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: { extend: {
+      colors: { unad: { teal:'#00445B', navy:'#01333F', green:'#035B3B', orange:'#D26714', base:'#EAEAEA', darkbg:'#0a1922' } },
+      fontFamily: { sans:['Inter','sans-serif'], display:['Montserrat','sans-serif'] }
+    }}
+  }
+</script>
+
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+
+<style>
+  html, body {
+    background-color:#EAEAEA; color:#01333F;
+    margin:0; padding:0; min-height:100vh;
+    font-family:'Inter',sans-serif;
+    transition: background-color .3s ease, color .3s ease;
+    overflow-x: hidden;
+  }
+  html.dark, html.dark body { background-color:#0a1922; color:#EAEAEA; }
+
+  body::before {
+    content:""; position:fixed; inset:0; z-index:1; pointer-events:none;
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+    opacity:.04; mix-blend-mode:multiply;
+  }
+  html.dark body::before { opacity:.02; mix-blend-mode:screen; }
+
+  .orb { position:fixed; border-radius:50%; filter:blur(140px); z-index:0; opacity:.6; pointer-events:none; }
+  .orb--navy   { background:#00445B; animation: float1 20s ease-in-out infinite; }
+  .orb--green  { background:#035B3B; animation: float2 28s ease-in-out infinite reverse; opacity:.35; }
+  .orb--orange { background:#D26714; animation: float2 25s ease-in-out infinite reverse; opacity:.4; }
+  @keyframes float1 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(5vw,5vh) scale(1.1);} }
+  @keyframes float2 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-5vw,-5vh) scale(1.1);} }
+
+  /* Navegación */
+  .sitenav {
+    position:fixed; top:1rem; left:50%; transform:translateX(-50%);
+    width:92%; max-width:1500px; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:.75rem 1.5rem; border-radius:1rem;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(255,255,255,.85);
+    border: 1px solid rgba(255,255,255,.5);
+    box-shadow: 0 4px 20px rgba(1,51,63,.05);
+    transition: all .3s ease;
+  }
+  html.dark .sitenav { background: rgba(1,51,63,.7); border-color: rgba(255,255,255,.1); box-shadow: 0 4px 20px rgba(0,0,0,.3); }
+  .sitenav__brand { display:flex; align-items:center; gap:.75rem; font-family:'Montserrat',sans-serif; font-weight:700; color:#01333F; text-decoration:none; }
+  html.dark .sitenav__brand { color:#fff; }
+  .sitenav__brand small { display:block; font-size:.75rem; font-weight:500; color:#00445B; }
+  html.dark .sitenav__brand small { color:#D26714; }
+  .sitenav__right { display:flex; align-items:center; gap:1.5rem; }
+  .sitenav__links { display:flex; gap:1.5rem; list-style:none; margin:0; padding:0; font-size:.875rem; font-weight:600; }
+  .sitenav__links a { color:#01333F; text-decoration:none; transition:color .2s; }
+  html.dark .sitenav__links a { color:#EAEAEA; }
+  .sitenav__links a:hover { color:#D26714; }
+  .sitenav__links a[aria-current="page"] { color:#D26714; border-bottom:2px solid #D26714; padding-bottom:2px; }
+  .theme-toggle { background:none; border:none; cursor:pointer; font-size:1.25rem; display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; background-color:rgba(0,0,0,.05); transition:background-color .2s; }
+  html.dark .theme-toggle { background-color:rgba(255,255,255,.1); }
+
+  /* Layout general — ahora scrollable vertical */
+  .malla-wrap {
+    position:relative; z-index:10;
+    padding: 6.5rem 1.25rem 3rem;
+    display:flex; flex-direction:column;
+    gap: 1.25rem;
+    max-width: 1600px; margin: 0 auto;
+  }
+
+  .hero {
+    text-align:center; flex-shrink: 0;
+    max-width: 900px; margin: 0 auto;
+  }
+  .hero__eyebrow {
+    font-family:'Montserrat',sans-serif; font-size:.72rem; font-weight:700;
+    letter-spacing:.18em; text-transform:uppercase; color:#D26714;
+    margin: 0 0 .3rem;
+  }
+  .hero h1 {
+    font-family:'Montserrat',sans-serif; font-weight:700;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color:#01333F; margin:.1rem 0 .35rem; line-height:1.15;
+  }
+  html.dark .hero h1 { color:#fff; }
+  .hero p {
+    color: color-mix(in srgb, currentColor 70%, transparent);
+    font-size: .82rem; line-height:1.5; max-width: 62ch; margin: 0 auto .7rem;
+  }
+
+  .legend {
+    display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:center;
+    font-size:.75rem; padding:.55rem .9rem; border-radius: 999px;
+    background: rgba(255,255,255,.55);
+    border: 1px solid rgba(0,68,91,.10);
+    max-width: fit-content; margin: 0 auto;
+  }
+  html.dark .legend { background: rgba(0,0,0,.35); border-color: rgba(255,255,255,.10); }
+  .legend__group { display:flex; gap:.75rem; align-items:center; flex-wrap:wrap; }
+  .legend__label { font-weight:700; color:#01333F; text-transform:uppercase; letter-spacing:.08em; font-size:.65rem; }
+  html.dark .legend__label { color:#EAEAEA; }
+  .legend__chip { display:inline-flex; align-items:center; gap:.35rem; font-weight:600; color:#334155; }
+  html.dark .legend__chip { color:#cbd5e1; }
+  .legend__dot { display:inline-block; width:8px; height:8px; border-radius:50%; }
+  .legend__hint { color:#D26714; font-weight:600; }
+
+  /* ============================================================
+     GRID PRINCIPAL: malla (1fr) + panel detalle (340px)
+     ============================================================ */
+  .malla-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 1rem;
+    height: 70vh;
+    min-height: 460px;
+    max-height: 720px;
+  }
+
+  .malla-panel {
+    min-height: 0;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(255,255,255,.78);
+    border: 1px solid rgba(255,255,255,.6);
+    box-shadow: 0 10px 40px rgba(1,51,63,.08);
+    border-radius: 1.5rem;
+    padding: .85rem;
+    overflow: hidden;
+    transition: all .3s ease;
+  }
+  html.dark .malla-panel { background: rgba(1,51,63,.65); border-color: rgba(255,255,255,.12); box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+
+  /* Malla horizontal */
+  .malla {
+    display: flex;
+    gap: .8rem;
+    height: 100%;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: .5rem;
+    align-items: stretch;
+    scroll-snap-type: x proximity;
+  }
+  .malla::-webkit-scrollbar { height: 8px; }
+  .malla::-webkit-scrollbar-track { background: rgba(0,68,91,.05); border-radius: 10px; }
+  .malla::-webkit-scrollbar-thumb { background: rgba(0,68,91,.25); border-radius: 10px; }
+  html.dark .malla::-webkit-scrollbar-track { background: rgba(255,255,255,.05); }
+  html.dark .malla::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); }
+
+  /* Columna de periodo — grid: header auto / body 1fr / footer auto */
+  .periodo {
+    flex: 0 0 220px;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-self: stretch;
+    min-height: 0;
+    border-radius: 1rem;
+    background: rgba(255,255,255,.55);
+    border: 1px solid rgba(0,68,91,.08);
+    box-shadow: 0 2px 10px rgba(1,51,63,.04);
+    overflow: hidden;
+    scroll-snap-align: start;
+    transition: box-shadow .3s;
+  }
+  html.dark .periodo { background: rgba(0,0,0,.30); border-color: rgba(255,255,255,.08); }
+  .periodo:hover { box-shadow: 0 8px 24px -6px rgba(1,51,63,.15); }
+
+  .periodo__header {
+    font-family:'Montserrat',sans-serif; font-weight:700;
+    color:#fff; padding: .6rem .85rem;
+    font-size: .76rem; letter-spacing: .07em;
+    text-transform: uppercase;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .5rem;
+  }
+  .periodo__header::after {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,.55);
+  }
+
+  .periodo__body {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: .35rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,68,91,.22) transparent;
+  }
+  .periodo__body::-webkit-scrollbar { width: 5px; }
+  .periodo__body::-webkit-scrollbar-track { background: transparent; }
+  .periodo__body::-webkit-scrollbar-thumb { background: rgba(0,68,91,.22); border-radius: 6px; }
+  html.dark .periodo__body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.20); }
+
+  .periodo__footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .4rem .85rem;
+    background: rgba(0,68,91,.06);
+    border-top: 1px solid rgba(0,68,91,.08);
+    font-size: .62rem; color: #64748b; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .1em;
+    gap: .5rem;
+    line-height: 1;
+  }
+  html.dark .periodo__footer {
+    background: rgba(255,255,255,.05);
+    border-top-color: rgba(255,255,255,.08);
+    color: #94a3b8;
+  }
+  .periodo__footer strong {
+    font-family:'Montserrat',sans-serif; font-weight: 800;
+    font-size: .95rem; color: #00445B;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+  html.dark .periodo__footer strong { color: #D26714; }
+
+  /* Curso */
+  .curso {
+    display: flex; flex-direction: column;
+    gap: .2rem;
+    padding: .5rem .6rem;
+    margin: 0 .5rem .4rem;
+    border-radius: .6rem;
+    background: rgba(255,255,255,.92);
+    border: 1px solid rgba(0,68,91,.08);
+    border-left: 4px solid var(--tipo-color, #00445B);
+    cursor: pointer;
+    transition: transform .22s cubic-bezier(.4,0,.2,1),
+                box-shadow .22s, border-color .22s, background .22s, opacity .3s;
+    position: relative;
+    outline: none;
+  }
+  .curso:first-child { margin-top: .1rem; }
+  .curso:last-child { margin-bottom: .1rem; }
+  html.dark .curso { background: rgba(0,0,0,.45); border-color: rgba(255,255,255,.08); }
+
+  .curso:hover,
+  .curso:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px -6px rgba(0,68,91,.25);
+    border-color: var(--card-color, #00445B);
+  }
+  .curso:hover .curso__name,
+  .curso:focus-visible .curso__name { color: var(--card-color, #01333F); }
+  html.dark .curso:hover .curso__name { color: #fff; }
+
+  .curso__type {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-size: .56rem; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--tipo-color, #00445B);
+    padding: 1px 6px; border-radius: 999px;
+    background: color-mix(in srgb, var(--tipo-color, #00445B) 12%, transparent);
+    width: fit-content;
+  }
+  .curso__name {
+    font-size: .72rem; font-weight: 600; line-height: 1.25;
+    color: #01333F;
+    transition: color .2s;
+  }
+  html.dark .curso__name { color: #e2e8f0; }
+  .curso__code {
+    font-family: 'Montserrat', monospace;
+    font-size: .56rem; color: #64748b; letter-spacing: .02em;
+  }
+  html.dark .curso__code { color: #94a3b8; }
+  .curso__note {
+    font-size: .58rem; color: #D26714;
+    font-style: italic; font-weight: 500;
+  }
+
+  /* Estados */
+  .malla.has-focus .curso { opacity: .25; filter: grayscale(.35); }
+  .malla.has-focus .curso.is-active,
+  .malla.has-focus .curso.is-prereq { opacity: 1; filter: none; }
+
+  .curso.is-active {
+    border-color: var(--card-color, #00445B);
+    box-shadow: 0 0 0 2px var(--card-color, #00445B),
+                0 10px 24px -8px rgba(0,68,91,.35);
+    transform: translateY(-3px);
+    background: color-mix(in srgb, var(--card-color, #00445B) 8%, #ffffff);
+  }
+  html.dark .curso.is-active {
+    background: color-mix(in srgb, var(--card-color, #00445B) 25%, #000);
+  }
+
+  .curso.is-prereq {
+    border-color: #D26714;
+    border-left-color: #D26714;
+    box-shadow: 0 4px 14px -6px rgba(210,103,20,.45);
+    background: color-mix(in srgb, #D26714 7%, #ffffff);
+  }
+  html.dark .curso.is-prereq {
+    background: color-mix(in srgb, #D26714 18%, #000);
+  }
+  .curso.is-prereq::before {
+    content: ""; position: absolute; top: -3px; right: -3px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #D26714;
+    box-shadow: 0 0 0 3px rgba(210,103,20,.25);
+  }
+
+  .curso.is-pinned {
+    box-shadow: 0 0 0 3px #D26714,
+                0 10px 24px -8px rgba(210,103,20,.5);
+    z-index: 2;
+  }
+  .curso.is-pinned::after {
+    content: "";
+    position: absolute;
+    top: -4px; left: -4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #D26714;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+  }
+  html.dark .curso.is-pinned::after { border-color: #01242e; }
+
+  /* ============================================================
+     PANEL DE DETALLE — INCRUSTADO (no flotante)
+     ============================================================ */
+  .detalle {
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(255,255,255,.97);
+    border: 1px solid rgba(0,68,91,.12);
+    border-left: 4px solid #00445B;
+    box-shadow: 0 10px 40px rgba(1,51,63,.08);
+    border-radius: 1.5rem;
+    padding: 1.1rem 1.1rem 1rem;
+    overflow: hidden;
+    transition: border-color .3s ease;
+  }
+  html.dark .detalle {
+    background: rgba(1,51,63,.85);
+    border-color: rgba(255,255,255,.12);
+    border-left-color: #D26714;
+    box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  }
+
+  .detalle__head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: .5rem;
+    padding-bottom: .55rem;
+    border-bottom: 1px solid rgba(0,68,91,.10);
+  }
+  html.dark .detalle__head { border-bottom-color: rgba(255,255,255,.10); }
+
+  .detalle h3 {
+    font-family:'Montserrat',sans-serif; font-weight:700;
+    font-size: .92rem; color:#01333F; margin: 0;
+    line-height: 1.25;
+  }
+  html.dark .detalle h3 { color:#fff; }
+
+  .detalle > p {
+    font-size: .72rem; color:#475569; margin: 0 0 .35rem; line-height:1.4;
+  }
+  html.dark .detalle > p { color:#cbd5e1; }
+  .detalle > p strong { color:#D26714; }
+
+  /* Placeholder cuando no hay curso seleccionado */
+  .detalle__placeholder {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    gap: .55rem;
+    padding: 1rem;
+    color: #64748b;
+  }
+  html.dark .detalle__placeholder { color:#94a3b8; }
+  .detalle__placeholder .iconify {
+    color: #D26714; opacity: .85;
+  }
+  .detalle__placeholder h3 {
+    font-size: .95rem; color:#01333F;
+  }
+  html.dark .detalle__placeholder h3 { color:#fff; }
+  .detalle__placeholder p {
+    font-size: .76rem; line-height:1.45; max-width: 24ch;
+    margin: 0;
+  }
+  .detalle__hint {
+    margin-top: .35rem;
+    font-size: .68rem;
+    color: #D26714;
+    font-weight: 600;
+    background: rgba(210,103,20,.10);
+    border-left: 3px solid #D26714;
+    padding: .35rem .55rem;
+    border-radius: .35rem;
+    text-align: left;
+    max-width: 26ch;
+  }
+
+  /* Lista de prerrequisitos con scroll */
+  .detalle__list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: .3rem;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(210,103,20,.4) transparent;
+  }
+  .detalle__list::-webkit-scrollbar { width: 5px; }
+  .detalle__list::-webkit-scrollbar-thumb { background: rgba(210,103,20,.4); border-radius: 6px; }
+  .detalle__list li {
+    font-size: .72rem; padding: .35rem .6rem;
+    background: rgba(210,103,20,.10);
+    border-left: 3px solid #D26714;
+    border-radius: .35rem;
+    color: #01333F;
+    line-height: 1.3;
+  }
+  html.dark .detalle__list li { color:#e2e8f0; background: rgba(210,103,20,.18); }
+  .detalle__list li strong {
+    font-family:'Montserrat',sans-serif;
+    color:#D26714; font-weight: 700;
+    margin-right: .15rem;
+  }
+
+  .detalle__close {
+    background: rgba(0,68,91,.08); border: none; cursor: pointer;
+    width: 24px; height: 24px; border-radius: 50%;
+    font-size: .95rem; line-height:1;
+    color: #01333F; display:flex; align-items:center; justify-content:center;
+    transition: background .2s, transform .2s;
+    flex-shrink: 0;
+  }
+  html.dark .detalle__close { background: rgba(255,255,255,.10); color:#EAEAEA; }
+  .detalle__close:hover { background: #D26714; color:#fff; transform: rotate(90deg); }
+
+  /* ============================================================
+     SECCIONES INFERIORES: ELECTIVIDAD + ELECTIVOS
+     ============================================================ */
+  .glass-section {
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(255,255,255,.78);
+    border: 1px solid rgba(255,255,255,.6);
+    box-shadow: 0 10px 40px rgba(1,51,63,.08);
+    border-radius: 1.5rem;
+    padding: 1.5rem 1.5rem 1.5rem;
+    transition: all .3s ease;
+  }
+  html.dark .glass-section { background: rgba(1,51,63,.65); border-color: rgba(255,255,255,.12); box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+
+  .section-head {
+    display: flex; align-items: center; gap: .65rem;
+    padding-bottom: .7rem; margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(0,68,91,.10);
+  }
+  html.dark .section-head { border-bottom-color: rgba(255,255,255,.10); }
+  .section-head .iconify { color: #D26714; flex-shrink: 0; }
+  .section-head h2 {
+    font-family:'Montserrat',sans-serif; font-weight:700;
+    font-size: 1.05rem; letter-spacing: .04em;
+    color: #01333F; margin: 0;
+    text-transform: uppercase;
+  }
+  html.dark .section-head h2 { color:#fff; }
+
+  /* RUTA DE LA ELECTIVIDAD */
+  .electividad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .85rem;
+  }
+  .linea {
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(0,68,91,.10);
+    background: rgba(255,255,255,.65);
+    display: flex; flex-direction: column;
+  }
+  html.dark .linea { background: rgba(0,0,0,.35); border-color: rgba(255,255,255,.10); }
+
+  .linea__head {
+    padding: .7rem .85rem;
+    color: #01333F;
+    border-bottom: 1px solid rgba(0,68,91,.10);
+  }
+  html.dark .linea__head { color:#fff; border-bottom-color: rgba(255,255,255,.10); }
+  .linea__head span {
+    display: block;
+    font-size: .62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .1em;
+    margin-bottom: .2rem;
+    opacity: .85;
+  }
+  .linea__head h3 {
+    font-family:'Montserrat',sans-serif;
+    font-size: .85rem; font-weight: 700;
+    line-height: 1.25; margin: 0;
+  }
+  .linea--1 .linea__head { background: linear-gradient(135deg, #cbe8cf, #a8d6b0); }
+  html.dark .linea--1 .linea__head { background: linear-gradient(135deg, #0c3820, #14512e); color: #fff; }
+  .linea--2 .linea__head { background: linear-gradient(135deg, #fbd7b5, #f5b982); }
+  html.dark .linea--2 .linea__head { background: linear-gradient(135deg, #5a3410, #7d4a14); color: #fff; }
+  .linea--3 .linea__head { background: linear-gradient(135deg, #c5dbe7, #9dc4d8); }
+  html.dark .linea--3 .linea__head { background: linear-gradient(135deg, #0b2f42, #103f5c); color: #fff; }
+
+  .linea table { width: 100%; border-collapse: collapse; }
+  .linea th {
+    font-size: .58rem; text-transform: uppercase; letter-spacing: .08em;
+    font-weight: 700; padding: .35rem .6rem;
+    text-align: left;
+    background: rgba(0,68,91,.05);
+    color: #475569;
+  }
+  html.dark .linea th { background: rgba(255,255,255,.05); color:#94a3b8; }
+  .linea th:first-child { width: 48px; text-align: center; }
+  .linea td {
+    padding: .5rem .6rem;
+    font-size: .72rem; line-height: 1.3;
+    border-bottom: 1px solid rgba(0,68,91,.06);
+    color: #01333F;
+  }
+  html.dark .linea td { color:#e2e8f0; border-bottom-color: rgba(255,255,255,.06); }
+  .linea td:first-child {
+    text-align: center;
+    font-family:'Montserrat',sans-serif;
+    font-weight: 800; color: #D26714;
+  }
+  .linea tr:last-child td { border-bottom: none; }
+
+  .section-note {
+    margin: .9rem 0 0;
+    padding: .65rem .9rem;
+    background: rgba(0,68,91,.05);
+    border-left: 3px solid #00445B;
+    border-radius: .5rem;
+    font-size: .74rem;
+    line-height: 1.5;
+    color: #334155;
+  }
+  html.dark .section-note { background: rgba(255,255,255,.05); color:#cbd5e1; border-left-color: #D26714; }
+
+  /* ELECTIVOS MALLA CURRICULAR */
+  .electivos-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 1rem;
+  }
+  .electivos-main { display: flex; flex-direction: column; gap: 1rem; }
+  .electivos-block { display: flex; flex-direction: column; gap: .5rem; }
+
+  .block-title {
+    font-family:'Montserrat',sans-serif; font-weight: 700;
+    font-size: .72rem; letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #fff; background: #035B3B;
+    padding: .45rem .8rem;
+    border-radius: .5rem;
+    margin: 0;
+  }
+  html.dark .block-title { background: #024a30; }
+
+  .electivos-cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .65rem;
+  }
+  .e-col {
+    border: 1px solid rgba(0,68,91,.10);
+    border-radius: .65rem;
+    background: rgba(255,255,255,.65);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  html.dark .e-col { background: rgba(0,0,0,.30); border-color: rgba(255,255,255,.10); }
+  .e-col__head {
+    font-size: .62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .07em;
+    padding: .45rem .6rem;
+    background: rgba(0,68,91,.06);
+    color: #00445B;
+    border-bottom: 1px solid rgba(0,68,91,.10);
+    text-align: center;
+    line-height: 1.25;
+  }
+  html.dark .e-col__head { background: rgba(255,255,255,.05); color:#e2e8f0; border-bottom-color: rgba(255,255,255,.10); }
+
+  .e-list { display: flex; flex-direction: column; }
+  .e-item {
+    display: flex; align-items: center; gap: .45rem;
+    padding: .45rem .55rem;
+    border-bottom: 1px solid rgba(0,68,91,.06);
+    font-size: .7rem; line-height: 1.25;
+    color: #01333F;
+  }
+  html.dark .e-item { color:#e2e8f0; border-bottom-color: rgba(255,255,255,.06); }
+  .e-item:last-child { border-bottom: none; }
+  .e-item__tag {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 2px; flex-shrink: 0;
+    font-family:'Montserrat',sans-serif;
+    font-size: .58rem; font-weight: 800;
+    padding: 2px 5px; border-radius: .3rem;
+    color: #fff;
+    min-width: 44px;
+  }
+  .e-item__tag--m { background: #035B3B; }   /* metodológico */
+  .e-item__tag--t { background: #D26714; }   /* teórico */
+  .e-item__tag--p { background: #C9930C; }   /* práctico */
+  .e-item__name { flex: 1; }
+  .e-item__code {
+    font-family:'Montserrat',monospace;
+    font-size: .58rem; color: #64748b;
+    white-space: nowrap;
+  }
+  html.dark .e-item__code { color:#94a3b8; }
+
+  /* Columna lateral: Opciones de Grado + Electivos */
+  .electivos-side { display: flex; flex-direction: column; gap: .85rem; }
+  .side-block {
+    border: 1px solid rgba(0,68,91,.10);
+    border-radius: .75rem;
+    background: rgba(255,255,255,.65);
+    overflow: hidden;
+  }
+  html.dark .side-block { background: rgba(0,0,0,.30); border-color: rgba(255,255,255,.10); }
+  .side-title {
+    font-family:'Montserrat',sans-serif; font-weight: 700;
+    font-size: .68rem; letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #fff; background: #035B3B;
+    padding: .45rem .7rem;
+    margin: 0;
+    text-align: center;
+  }
+  .side-title--green { background: #035B3B; }
+  .side-block ul {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+  }
+  .side-block li {
+    font-size: .72rem;
+    padding: .45rem .7rem;
+    border-bottom: 1px solid rgba(0,68,91,.06);
+    color: #01333F;
+    display: flex; align-items: center; gap: .4rem;
+  }
+  html.dark .side-block li { color:#e2e8f0; border-bottom-color: rgba(255,255,255,.06); }
+  .side-block li:last-child { border-bottom: none; }
+  .side-block li::before {
+    content: ""; width: 5px; height: 5px;
+    border-radius: 50%; background: #D26714;
+    flex-shrink: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .electivos-layout { grid-template-columns: 1fr; }
+    .electivos-cols { grid-template-columns: 1fr; }
+    .electividad-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .malla-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr auto;
+      height: auto;
+      max-height: none;
+      min-height: 0;
+    }
+    .malla-panel { min-height: 380px; height: 60vh; }
+    .detalle { min-height: 220px; height: auto; }
+    .detalle__list { max-height: 40vh; }
+  }
+  @media (max-width: 640px) {
+    .malla-wrap { padding: 6rem .75rem 2rem; }
+    .periodo { flex: 0 0 82vw; }
+    .hero p { font-size:.78rem; }
+  }
+</style>
 </head>
 <body>
 
@@ -17,45 +703,239 @@
 <div class="orb orb--green"  style="width:460px;height:460px;top:22vh;right:-220px;"></div>
 <div class="orb orb--orange" style="width:420px;height:420px;bottom:-180px;left:20vw;"></div>
 
-<nav class="sitenav">
-  <a class="sitenav__brand" href="index.html">Med. Veterinaria <small>Programa académico</small></a>
+<nav class="sitenav" id="main-nav">
+  <a class="sitenav__brand" href="index.html">
+    <div class="w-10 h-10 rounded bg-unad-teal text-white flex items-center justify-center font-bold font-display shadow-md mr-1">MV</div>
+    <div>Med. Veterinaria <small>Programa académico</small></div>
+  </a>
   <div class="sitenav__right">
-    <ul class="sitenav__links">
+    <ul class="sitenav__links hidden md:flex">
       <li><a href="index.html">Inicio</a></li>
       <li><a href="malla-academica.html" aria-current="page">Malla académica</a></li>
-      <li><a href="condicion-1.html">Condición 1</a></li>
+      <li><a href="condicion-4.html">Condición 4</a></li>
     </ul>
-    <button class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro">🌙</button>
+    <button class="theme-toggle" type="button" aria-label="Cambiar tema">🌙</button>
   </div>
 </nav>
 
-<header class="hero">
-  <p class="hero__eyebrow">Plan de estudios · 10 periodos</p>
-  <h1>Malla académica interactiva</h1>
-  <p>
-    Pasa el cursor (o toca en móvil) sobre cualquier curso para ver la ruta completa
-    de prerrequisitos que debes cursar antes de llegar a él. Cada periodo tiene su
-    propio color y cada curso indica si es Teórico, Práctico o Metodológico.
-  </p>
-
-  <div class="legend">
-    <div class="legend__group">
-      <span class="legend__label">Tipo</span>
-      <span class="legend__chip"><span class="legend__dot" style="background:#D26714;color:#D26714"></span>T · Teórico</span>
-      <span class="legend__chip"><span class="legend__dot" style="background:#C9930C;color:#C9930C"></span>P · Práctico</span>
-      <span class="legend__chip"><span class="legend__dot" style="background:#035B3B;color:#035B3B"></span>M · Metodológico</span>
-    </div>
-    <span class="legend__hint">👆 Pasa el mouse sobre un curso para ver sus prerrequisitos</span>
-  </div>
-</header>
-
 <main class="malla-wrap">
-  <div class="malla-panel">
-    <div class="malla" id="malla" aria-label="Malla académica por periodos"></div>
-  </div>
-</main>
 
-<div class="detalle" id="detalle" role="status" aria-live="polite"></div>
+  <header class="hero">
+    <p class="hero__eyebrow">Plan de estudios · 10 periodos</p>
+    <h1>Malla académica interactiva</h1>
+    <p>
+      Pasa el cursor (o toca en móvil) sobre cualquier curso para ver la ruta completa
+      de prerrequisitos que debes cursar antes de llegar a él. Cada periodo tiene su
+      propio color y cada curso indica si es Teórico, Práctico o Metodológico.
+    </p>
+
+    <div class="legend">
+      <div class="legend__group">
+        <span class="legend__label">Tipo</span>
+        <span class="legend__chip"><span class="legend__dot" style="background:#D26714"></span>T · Teórico</span>
+        <span class="legend__chip"><span class="legend__dot" style="background:#C9930C"></span>P · Práctico</span>
+        <span class="legend__chip"><span class="legend__dot" style="background:#035B3B"></span>M · Metodológico</span>
+      </div>
+      <span class="legend__hint">👆 Pasa el mouse sobre un curso para ver sus prerrequisitos</span>
+    </div>
+  </header>
+
+  <!-- GRID: malla + panel detalle incrustado -->
+  <div class="malla-grid">
+    <div class="malla-panel">
+      <div class="malla" id="malla" aria-label="Malla académica por periodos"></div>
+    </div>
+    <aside class="detalle" id="detalle" role="status" aria-live="polite"></aside>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       RUTA DE LA ELECTIVIDAD
+  ══════════════════════════════════════════ -->
+  <section class="glass-section">
+    <div class="section-head">
+      <span class="iconify" data-icon="lucide:route" data-width="26"></span>
+      <h2>Ruta de la Electividad</h2>
+    </div>
+
+    <div class="electividad-grid">
+
+      <div class="linea linea--1">
+        <div class="linea__head">
+          <span>Línea de Profundización I</span>
+          <h3>Conservación, manejo y bienestar de la fauna silvestre</h3>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Créd.</th><th>Nombre del curso</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>3</td><td>Conservación y Gestión de Fauna Silvestre y Exótica</td></tr>
+            <tr><td>3</td><td>Bienestar y Manejo Sostenible de Fauna Silvestre</td></tr>
+            <tr><td>3</td><td>Rehabilitación y Restablecimiento de Fauna en Ecosistemas</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="linea linea--2">
+        <div class="linea__head">
+          <span>Línea de Profundización II</span>
+          <h3>Salud pública veterinaria y enfoque One Health</h3>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Créd.</th><th>Nombre del curso</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>3</td><td>Inocuidad alimentaria</td></tr>
+            <tr><td>3</td><td>Salud de hato y gestión sanitaria</td></tr>
+            <tr><td>3</td><td>Prevención, Vigilancia y Control de Zoonosis</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="linea linea--3">
+        <div class="linea__head">
+          <span>Línea de Profundización III</span>
+          <h3>Gestión Integral de la Medicina Veterinaria</h3>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Créd.</th><th>Nombre del curso</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>3</td><td>Especies menores y no convencionales</td></tr>
+            <tr><td>3</td><td>Gestión y Administración de Servicios Veterinarios</td></tr>
+            <tr><td>3</td><td>Geriatría veterinaria</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <p class="section-note">
+      Los estudiantes del programa Medicina Veterinaria deben optar por <strong>solo una línea de profundización</strong>
+      (según el plan de estudios) por lo cual no se permite ver dos cursos (uno de cada línea) para el cumplimiento del plan.
+    </p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       ELECTIVOS MALLA CURRICULAR
+  ══════════════════════════════════════════ -->
+  <section class="glass-section">
+    <div class="section-head">
+      <span class="iconify" data-icon="lucide:list-checks" data-width="26"></span>
+      <h2>Electivos Malla Curricular Programa de Medicina Veterinaria</h2>
+    </div>
+
+    <div class="electivos-layout">
+
+      <div class="electivos-main">
+
+        <!-- Bloque 1 -->
+        <div class="electivos-block">
+          <h3 class="block-title">Cursos electivos del componente disciplinar específico*</h3>
+          <div class="electivos-cols">
+
+            <div class="e-col">
+              <div class="e-col__head">Línea 1: Conservación, manejo y bienestar de la fauna silvestre</div>
+              <div class="e-list">
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Conservación y Gestión de Fauna Silvestre y Exótica</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Bienestar y Manejo Sostenible de Fauna Silvestre</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Rehabilitación y Restablecimiento de Fauna en Ecosistemas</span></div>
+              </div>
+            </div>
+
+            <div class="e-col">
+              <div class="e-col__head">Línea 2: Salud pública veterinaria y enfoque One Health</div>
+              <div class="e-list">
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Inocuidad alimentaria</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Salud de hato y gestión sanitaria</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Prevención, Vigilancia y Control de Zoonosis</span></div>
+              </div>
+            </div>
+
+            <div class="e-col">
+              <div class="e-col__head">Línea 3: Gestión Integral de la Medicina Veterinaria para Animales de Compañía</div>
+              <div class="e-list">
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Especies menores y no convencionales</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Gestión y Administración de Servicios Veterinarios</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--m">E · 3 · M</span><span class="e-item__name">Geriatría veterinaria</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Bloque 2 -->
+        <div class="electivos-block">
+          <h3 class="block-title">Cursos electivos por campo de formación</h3>
+          <div class="electivos-cols">
+
+            <div class="e-col">
+              <div class="e-col__head">Interdisciplinar Básico Común (IBC)</div>
+              <div class="e-list">
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 3 · T</span><span class="e-item__name">Educación ambiental</span><span class="e-item__code">358028</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 3 · T</span><span class="e-item__name">Inclusión Social</span><span class="e-item__code">40004</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 3 · T</span><span class="e-item__name">Emprendimiento solidario</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 3 · T</span><span class="e-item__name">Responsabilidad social empresarial</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 3 · T</span><span class="e-item__name">Sostenibilidad, desarrollo y calidad de vida</span><span class="e-item__code">40006</span></div>
+              </div>
+            </div>
+
+            <div class="e-col">
+              <div class="e-col__head">Disciplinar Común (DC)</div>
+              <div class="e-list">
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 3 · T</span><span class="e-item__name">Animales de compañía</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 3 · T</span><span class="e-item__name">Topografía</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 2 · T</span><span class="e-item__name">Economía agraria</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 2 · T</span><span class="e-item__name">Gestión ambiental</span></div>
+              </div>
+            </div>
+
+            <div class="e-col">
+              <div class="e-col__head">Complementario</div>
+              <div class="e-list">
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 1 · T</span><span class="e-item__name">Alimentación saludable y Bienestar humano</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 1 · T</span><span class="e-item__name">Estrategias participativas para el trabajo comunitario</span><span class="e-item__code">502369520</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 1 · T</span><span class="e-item__name">Derechos de los animales</span><span class="e-item__code">252519396</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 1 · T</span><span class="e-item__name">Discapacidad y sexualidad</span><span class="e-item__code">80011</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 1 · T</span><span class="e-item__name">Hoja de Vida</span><span class="e-item__code">300040</span></div>
+                <div class="e-item"><span class="e-item__tag e-item__tag--t">E · 1 · T</span><span class="e-item__name">Guitarra</span><span class="e-item__code">80010</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="electivos-side">
+        <div class="side-block">
+          <h3 class="side-title">Opciones de Grado</h3>
+          <ul>
+            <li>Proyecto de investigación</li>
+            <li>Proyecto aplicado</li>
+            <li>Monografía</li>
+            <li>Créditos de postgrado</li>
+            <li>Pasantía</li>
+            <li>Diplomado</li>
+          </ul>
+        </div>
+        <div class="side-block">
+          <h3 class="side-title side-title--green">Electivos</h3>
+          <ul>
+            <li>Electivos DE — 9 Créd</li>
+            <li>Electivos IBC — 6 Créd</li>
+            <li>Electivos DC — 5 Créd</li>
+            <li>Electivos CFC — 3 Créd</li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+</main>
 
 <script src="js/embed-mode.js"></script>
 <script src="js/theme.js"></script>
