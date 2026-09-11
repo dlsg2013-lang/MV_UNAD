@@ -1,51 +1,1179 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Condición 3 · Programa académico</title>
-<meta name="description" content="Condición 3 del programa." />
+<title>Condición 3 · Consistencia Curricular</title>
+<meta name="description" content="Condición 3: Consistencia Curricular del programa de Medicina Veterinaria - UNAD" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css" />
-<link rel="stylesheet" href="css/condicion.css" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    unad: {
+                        teal: '#00445B',
+                        navy: '#01333F',
+                        green: '#035B3B',
+                        orange: '#D26714',
+                        base: '#EAEAEA',
+                        darkbg: '#0a1922'
+                    }
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    display: ['Montserrat', 'sans-serif'],
+                }
+            }
+        }
+    }
+</script>
+
+<!-- GSAP & Observer -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script>
+
+<!-- Iconify for Animated Icons -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+
+<style>
+    body {
+        background-color: #EAEAEA;
+        color: #01333F;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .dark body {
+        background-color: #0a1922;
+        color: #EAEAEA;
+    }
+
+    /* Textura de lienzo sutil */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+        opacity: 0.04;
+        mix-blend-mode: multiply;
+    }
+    .dark body::before {
+        opacity: 0.02;
+        mix-blend-mode: screen;
+    }
+
+    /* Orbes Ambientales Animados */
+    .orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(140px);
+        z-index: 0;
+        opacity: 0.6;
+        pointer-events: none;
+    }
+    .orb--navy {
+        background: #00445B;
+        animation: float1 20s ease-in-out infinite;
+    }
+    .orb--orange {
+        background: #D26714;
+        animation: float2 25s ease-in-out infinite reverse;
+        opacity: 0.4;
+    }
+
+    @keyframes float1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(5vw, 5vh) scale(1.1); } }
+    @keyframes float2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-5vw, -5vh) scale(1.1); } }
+
+    /* Estructura UI base */
+    .sitenav {
+        position: fixed;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 92%;
+        max-width: 1500px;
+        z-index: 50;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 1rem;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 20px rgba(1, 51, 63, 0.05);
+        transition: all 0.3s ease;
+    }
+    .dark .sitenav {
+        background: rgba(1, 51, 63, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .sitenav__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: #01333F;
+        text-decoration: none;
+    }
+    .dark .sitenav__brand { color: #ffffff; }
+    
+    .sitenav__brand small {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #00445B;
+    }
+    .dark .sitenav__brand small { color: #D26714; }
+
+    .sitenav__right { display: flex; align-items: center; gap: 1.5rem; }
+    .sitenav__links { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.875rem; font-weight: 600; }
+    .sitenav__links a { color: #01333F; text-decoration: none; transition: color 0.2s; }
+    .dark .sitenav__links a { color: #EAEAEA; }
+    .sitenav__links a:hover { color: #D26714; }
+    .sitenav__links a[aria-current="page"] { color: #D26714; border-bottom: 2px solid #D26714; padding-bottom: 2px; }
+
+    .theme-toggle {
+        background: none; border: none; cursor: pointer; font-size: 1.25rem;
+        display: flex; align-items: center; justify-content: center;
+        width: 36px; height: 36px; border-radius: 50%;
+        background-color: rgba(0,0,0,0.05); transition: background-color 0.2s;
+    }
+    .dark .theme-toggle { background-color: rgba(255,255,255,0.1); }
+
+    /* Slider Container & Glass Panels */
+    .slider-container { position: relative; width: 100vw; height: 100vh; z-index: 10; }
+    .slide {
+        position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+        visibility: hidden; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; padding: 5rem 2rem 2rem 2rem;
+    }
+
+    .glass-panel {
+        width: 100%;
+        max-width: 95vw;
+        height: 86vh;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 40px rgba(1, 51, 63, 0.08);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+    }
+    .dark .glass-panel {
+        background: rgba(1, 51, 63, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Scrollbars internos */
+    .custom-scroll { overflow-y: auto; overflow-x: hidden; padding-right: 10px; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(0,68,91,0.05); border-radius: 10px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0,68,91,0.2); border-radius: 10px; }
+    .dark .custom-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .dark .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+
+    /* Side Nav (Dots) con Tooltips */
+    .sidenav-dots {
+        position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+        z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 6px;
+        background: rgba(255,255,255,0.5); backdrop-filter: blur(8px);
+        padding: 10px 6px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3);
+        max-height: 80vh; overflow-y: auto;
+    }
+    .dark .sidenav-dots { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
+    .nav-btn { background: none; border: none; cursor: pointer; color: inherit; padding: 2px; display: flex; align-items: center; justify-content: center; }
+    
+    .dot { position: relative; width: 6px; height: 6px; border-radius: 50%; background: #00445B; opacity: 0.3; transition: all 0.3s; cursor: pointer; }
+    .dark .dot { background: #EAEAEA; }
+    .dot.active { opacity: 1; height: 18px; border-radius: 4px; background: #D26714; }
+    
+    /* Efecto Tooltip en Hover */
+    .dot::after {
+        content: attr(data-title);
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%) translateX(10px);
+        background: #00445B;
+        color: #fff;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        border: 1px solid rgba(255,255,255,0.1);
+        z-index: 100;
+    }
+    .dark .dot::after { background: #EAEAEA; color: #01333F; border: 1px solid rgba(0,0,0,0.1); }
+    .dot:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+
+    /* Tablas Estilizadas */
+    .styled-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+    .styled-table th { background-color: #00445B; color: white; padding: 12px; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; position: sticky; top: 0; z-index: 10; }
+    .styled-table td { padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); vertical-align: top; }
+    .dark .styled-table td { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .styled-table tr:hover td { background-color: rgba(0,68,91,0.03); }
+    .dark .styled-table tr:hover td { background-color: rgba(255,255,255,0.03); }
+    .styled-table th.sub-header { background-color: #035B3B; top: 38px; }
+
+    /* Tarjetas Interactivas con Efectos */
+    .hover-card { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s; }
+    .hover-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -8px rgba(0, 68, 91, 0.15); border-color: #D26714; }
+</style>
 </head>
 <body>
 
-<div class="orb orb--navy"   style="width:480px;height:480px;top:-160px;left:-140px;"></div>
+<div class="orb orb--navy" style="width:480px;height:480px;top:-160px;left:-140px;"></div>
 <div class="orb orb--orange" style="width:420px;height:420px;bottom:-180px;right:10vw;"></div>
 
-<nav class="sitenav">
-  <a class="sitenav__brand" href="index.html">Med. Veterinaria <small>Programa académico</small></a>
-  <div class="sitenav__right">
-    <ul class="sitenav__links">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="malla-academica.html">Malla académica</a></li>
-      <li><a href="condicion-3.html" aria-current="page">Condición 3</a></li>
-    </ul>
-    <button class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro">🌙</button>
-  </div>
+<nav class="sitenav" id="main-nav">
+    <a class="sitenav__brand" href="index.html">
+        <div class="w-10 h-10 rounded bg-unad-teal text-white flex items-center justify-center font-bold font-display shadow-md mr-1">MV</div>
+        <div>Med. Veterinaria <small>Programa académico</small></div>
+    </a>
+    <div class="sitenav__right">
+        <ul class="sitenav__links hidden md:flex">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="condicion-1.html">Condición 1</a></li>
+            <li><a href="condicion-3.html" aria-current="page">Condición 3</a></li>
+            <li><a href="condicion-7.html">Condición 7</a></li>
+        </ul>
+        <button class="theme-toggle" id="theme-btn" type="button" aria-label="Cambiar a modo oscuro">🌙</button>
+    </div>
 </nav>
 
-<header class="cond-hero">
-  <p class="cond-hero__eyebrow">Sección independiente</p>
-  <h1>Condición 3</h1>
-  <p>Esta página es completamente independiente: tiene su propia URL y se puede insertar sola en Canva o Genially usando el enlace de embed (ver README).</p>
-</header>
+<aside class="sidenav-dots" id="side-nav">
+    <button class="nav-btn" id="btn-up" aria-label="Subir">
+        <span class="iconify text-unad-teal dark:text-white" data-icon="lucide:chevron-up" data-width="18"></span>
+    </button>
+    <div id="dot-container" class="flex flex-col gap-1.5 py-1"></div>
+    <button class="nav-btn" id="btn-down" aria-label="Bajar">
+        <span class="iconify text-unad-teal dark:text-white" data-icon="lucide:chevron-down" data-width="18"></span>
+    </button>
+</aside>
 
-<main class="cond-body">
-  <div class="cond-body__placeholder">
-    Aquí va el contenido de la <strong>Condición 3</strong>. Cuéntame qué debe llevar
-    (texto, tabla, checklist, imagen, video) y lo reemplazo por el diseño final —
-    este bloque es solo un marcador de posición.
-    <br><br>
-    Enlace normal: <code>condicion-3.html</code><br>
-    Enlace para insertar (embed, sin menú): <code>condicion-3.html?embed=1</code>
-  </div>
+<main class="slider-container" id="slider">
+
+    <section class="slide">
+        <div class="glass-panel items-center justify-center text-center">
+            <span class="gsap-reveal px-4 py-1.5 rounded-full bg-unad-orange text-white text-xs font-bold uppercase tracking-wider mb-6 flex items-center gap-2 shadow-sm">
+                <span class="iconify animate-pulse" data-icon="lucide:layers" data-width="16"></span> Sección de Acreditación
+            </span>
+            <h1 class="gsap-reveal text-4xl md:text-6xl font-display font-bold text-unad-teal dark:text-white mb-8">Condición 3. Consistencia Curricular</h1>
+            
+            <div class="gsap-reveal grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl text-left bg-white/60 dark:bg-black/40 p-8 rounded-2xl border border-unad-teal/10 shadow-sm w-full">
+                <div class="flex items-start gap-4">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:graduation-cap" data-width="24"></span>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-500 uppercase">Programa:</span>
+                        <span class="font-semibold text-base dark:text-gray-200">Medicina Veterinaria (ECAPMA - UNAD)</span>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <span class="iconify text-unad-orange mt-1 shrink-0" data-icon="lucide:book-marked" data-width="24"></span>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-500 uppercase">Componente:</span>
+                        <span class="font-semibold text-base dark:text-gray-200">Estructura y Malla Curricular</span>
+                    </div>
+                </div>
+                <div class="col-span-1 md:col-span-2 flex items-start gap-4 mt-2">
+                    <span class="iconify text-unad-green mt-1 shrink-0" data-icon="lucide:target" data-width="24"></span>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-500 uppercase">Objetivo del Componente:</span>
+                        <span class="font-medium text-base dark:text-gray-200 leading-relaxed">Demostrar la alineación integral entre los propósitos de formación, los perfiles de ingreso y egreso, los núcleos problémicos, los resultados de aprendizaje (RAP) y el plan de estudios del programa.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:target" data-width="32"></span>
+                    Propósito y Perfil de Ingreso
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-6xl mx-auto py-2">
+                <!-- Propósito Card -->
+                <div class="w-full md:w-1/2 relative group h-full">
+                    <div class="absolute inset-0 bg-gradient-to-r from-unad-teal to-unad-navy rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-20 dark:opacity-40"></div>
+                    <div class="relative bg-white/90 dark:bg-black/70 p-8 rounded-2xl border border-white/40 shadow-xl backdrop-blur-md h-full flex flex-col">
+                        <div class="w-14 h-14 bg-unad-teal/10 rounded-2xl flex items-center justify-center mb-6 border border-unad-teal/20 shadow-sm">
+                            <span class="iconify text-unad-teal" data-icon="lucide:crosshair" data-width="32"></span>
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-unad-navy dark:text-white mb-4">Propósito de Formación</h3>
+                        <p class="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-5">Formar Médicos Veterinarios con sólida fundamentación científica, clínica, sanitaria, ética y humanística, capaces de comprender e intervenir las dinámicas que afectan la salud y el bienestar animal, la salud pública veterinaria y la sostenibilidad de los sistemas productivos y los territorios.</p>
+                        <p class="text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-medium bg-gradient-to-r from-unad-teal/10 to-transparent p-4 rounded-xl border-l-4 border-unad-teal mt-auto">
+                            El programa desarrolla capacidades mediante la toma de decisiones basada en evidencia y el abordaje desde el enfoque <strong>Una sola Salud (One Health)</strong>.
+                        </p>
+                    </div>
+                </div>
+                <!-- Perfil de Ingreso Card -->
+                <div class="w-full md:w-1/2 relative group h-full">
+                    <div class="absolute inset-0 bg-gradient-to-l from-unad-orange to-red-500 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-20 dark:opacity-30"></div>
+                    <div class="relative bg-white/90 dark:bg-black/70 p-8 rounded-2xl border border-white/40 shadow-xl backdrop-blur-md h-full flex flex-col">
+                        <div class="w-14 h-14 bg-unad-orange/10 rounded-2xl flex items-center justify-center mb-6 border border-unad-orange/20 shadow-sm">
+                            <span class="iconify text-unad-orange" data-icon="lucide:user-plus" data-width="32"></span>
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-unad-navy dark:text-white mb-4">Perfil de Ingreso</h3>
+                        <p class="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-6">El aspirante manifiesta profundo interés por las ciencias biológicas, salud animal, producción pecuaria sostenible y la interacción integral humano-animal-ambiente.</p>
+                        <div class="space-y-4 mt-auto">
+                            <div class="flex items-start gap-3 bg-white dark:bg-gray-800/80 p-3.5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:-translate-y-1 transition-transform">
+                                <div class="bg-unad-orange/20 p-1.5 rounded-lg shrink-0 mt-0.5"><span class="iconify text-unad-orange" data-icon="lucide:check" data-width="16"></span></div>
+                                <p class="text-xs md:text-sm text-gray-700 dark:text-gray-300 font-medium">Competencias básicas en ciencias naturales, matemáticas, comunicación y herramientas digitales.</p>
+                            </div>
+                            <div class="flex items-start gap-3 bg-white dark:bg-gray-800/80 p-3.5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:-translate-y-1 transition-transform">
+                                <div class="bg-unad-orange/20 p-1.5 rounded-lg shrink-0 mt-0.5"><span class="iconify text-unad-orange" data-icon="lucide:check" data-width="16"></span></div>
+                                <p class="text-xs md:text-sm text-gray-700 dark:text-gray-300 font-medium">Disposición para el aprendizaje autónomo, pensamiento crítico, investigación y trabajo colaborativo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia del propósito formativo con las necesidades del entorno.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Declaración explícita en el Documento Maestro (Matriz de Consistencia).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-spin" data-icon="lucide:graduation-cap" data-width="32" style="animation-duration: 12s;"></span>
+                    Perfil de Formación y de Egreso
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col items-center justify-center gap-8 w-full max-w-6xl mx-auto py-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full h-full">
+                    <!-- Perfil de Formación Card -->
+                    <div class="bg-gradient-to-br from-white/95 to-white/60 dark:from-gray-900/95 dark:to-gray-900/60 p-8 rounded-3xl border border-unad-teal/20 shadow-2xl backdrop-blur-xl relative overflow-hidden group flex flex-col">
+                        <div class="absolute -right-12 -top-12 w-48 h-48 bg-unad-teal/10 rounded-full blur-3xl group-hover:bg-unad-teal/20 transition-colors duration-500"></div>
+                        <div class="flex items-center gap-4 mb-6 relative z-10">
+                            <div class="p-3.5 bg-gradient-to-br from-unad-teal to-blue-700 rounded-2xl shadow-lg text-white">
+                                <span class="iconify" data-icon="lucide:book-open" data-width="28"></span>
+                            </div>
+                            <h3 class="font-display font-bold text-2xl text-unad-navy dark:text-white">Perfil de Formación</h3>
+                        </div>
+                        <div class="space-y-5 relative z-10 mt-auto mb-auto">
+                            <p class="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium">Durante su proceso formativo, el estudiante integra los fundamentos de las ciencias básicas, biomédicas y sociohumanísticas con los conocimientos clínicos, diagnósticos, terapéuticos, quirúrgicos, epidemiológicos y de salud pública veterinaria.</p>
+                            <div class="flex items-center gap-4">
+                                <div class="h-px flex-1 bg-gradient-to-r from-unad-teal/50 to-transparent"></div>
+                                <span class="iconify text-unad-teal/50" data-icon="lucide:arrow-down" data-width="20"></span>
+                                <div class="h-px flex-1 bg-gradient-to-l from-unad-teal/50 to-transparent"></div>
+                            </div>
+                            <p class="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed font-medium">Desarrolla progresivamente capacidades para el razonamiento clínico, la toma de decisiones basada en evidencia y competencias para la gestión sanitaria, la promoción del bienestar animal y el abordaje integral desde el enfoque One Health.</p>
+                        </div>
+                    </div>
+
+                    <!-- Perfil de Egreso Card -->
+                    <div class="bg-gradient-to-bl from-white/95 to-white/60 dark:from-gray-900/95 dark:to-gray-900/60 p-8 rounded-3xl border border-unad-green/20 shadow-2xl backdrop-blur-xl relative overflow-hidden group flex flex-col">
+                        <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-unad-green/10 rounded-full blur-3xl group-hover:bg-unad-green/20 transition-colors duration-500"></div>
+                        <div class="flex items-center gap-4 mb-6 relative z-10">
+                            <div class="p-3.5 bg-gradient-to-br from-unad-green to-emerald-700 rounded-2xl shadow-lg text-white">
+                                <span class="iconify" data-icon="lucide:award" data-width="28"></span>
+                            </div>
+                            <h3 class="font-display font-bold text-2xl text-unad-navy dark:text-white">Perfil de Egreso</h3>
+                        </div>
+                        <p class="text-sm md:text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-6 relative z-10 font-medium">El egresado es un profesional con sólida formación científica, tecnológica, ética y humanística, capaz de prevenir, diagnosticar, tratar, controlar y hacer seguimiento a problemas de salud animal.</p>
+                        
+                        <ul class="space-y-3 relative z-10 mt-auto">
+                            <li class="flex items-center gap-4 bg-unad-green/5 hover:bg-unad-green/15 transition-all p-3.5 rounded-xl border border-unad-green/10 hover:shadow-sm hover:-translate-y-0.5">
+                                <div class="bg-white dark:bg-black/50 p-2 rounded-full shadow-sm shrink-0">
+                                    <span class="iconify text-unad-green" data-icon="lucide:leaf" data-width="20"></span>
+                                </div>
+                                <span class="text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">Sistemas de producción, bioseguridad e inocuidad.</span>
+                            </li>
+                            <li class="flex items-center gap-4 bg-unad-green/5 hover:bg-unad-green/15 transition-all p-3.5 rounded-xl border border-unad-green/10 hover:shadow-sm hover:-translate-y-0.5">
+                                <div class="bg-white dark:bg-black/50 p-2 rounded-full shadow-sm shrink-0">
+                                    <span class="iconify text-unad-green" data-icon="lucide:globe" data-width="20"></span>
+                                </div>
+                                <span class="text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">Análisis integral One Health (salud animal-humana-ambiental).</span>
+                            </li>
+                            <li class="flex items-center gap-4 bg-unad-green/5 hover:bg-unad-green/15 transition-all p-3.5 rounded-xl border border-unad-green/10 hover:shadow-sm hover:-translate-y-0.5">
+                                <div class="bg-white dark:bg-black/50 p-2 rounded-full shadow-sm shrink-0">
+                                    <span class="iconify text-unad-green" data-icon="lucide:users" data-width="20"></span>
+                                </div>
+                                <span class="text-xs md:text-sm text-gray-800 dark:text-gray-200 font-semibold">Pensamiento crítico, responsabilidad ética y social.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia entre el proceso formativo y el perfil prometido.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Definición explícita de perfiles alineados a las competencias de egreso.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:briefcase" data-width="32"></span>
+                    Perfil Ocupacional
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center items-center gap-6">
+                <div class="bg-gradient-to-r from-unad-navy to-unad-teal text-white p-8 rounded-2xl shadow-lg border border-white/20 max-w-5xl w-full hover-card">
+                    <h3 class="font-bold text-sm mb-4 flex items-center gap-2 border-b border-white/20 pb-3 uppercase tracking-wider text-unad-orange">
+                        <span class="iconify" data-icon="lucide:building-2" data-width="20"></span> Campos de Acción del Médico Veterinario UNAD
+                    </h3>
+                    <p class="font-medium text-base md:text-lg leading-relaxed mb-6">Podrá desempeñarse en organizaciones públicas, privadas, comunitarias y del sector solidario, desarrollando actividades relacionadas con la salud y el bienestar animal, la producción animal sostenible, la salud pública veterinaria y la gestión sanitaria.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+                            <span class="iconify text-unad-orange mb-2" data-icon="lucide:stethoscope" data-width="24"></span>
+                            <h4 class="font-bold text-sm mb-1 text-white">Clínica y Sanidad</h4>
+                            <p class="text-xs text-gray-300">Promoción, prevención, diagnóstico, tratamiento y control de enfermedades animales. Implementación de bioseguridad y gestión sanitaria.</p>
+                        </div>
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+                            <span class="iconify text-unad-orange mb-2" data-icon="lucide:shield-check" data-width="24"></span>
+                            <h4 class="font-bold text-sm mb-1 text-white">Salud Pública (One Health)</h4>
+                            <p class="text-xs text-gray-300">Prevención y control de zoonosis, vigilancia epidemiológica e inocuidad alimentaria en interacción humano-animal-ambiente.</p>
+                        </div>
+                        <div class="bg-black/20 p-4 rounded-xl border border-white/10">
+                            <span class="iconify text-unad-orange mb-2" data-icon="lucide:flask-conical" data-width="24"></span>
+                            <h4 class="font-bold text-sm mb-1 text-white">Desarrollo e Investigación</h4>
+                            <p class="text-xs text-gray-300">Producción pecuaria, asistencia técnica, laboratorios diagnósticos, investigación aplicada, extensión rural y gestión ambiental.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Pertinencia de las ocupaciones proyectadas con el entorno laboral.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Definición de campos de acción en la Matriz de Consistencia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:anchor" data-width="32"></span>
+                    Núcleo Integrador de Problema (NIP)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center items-center gap-5">
+                <div class="bg-white/70 dark:bg-black/40 border-t-4 border-unad-teal p-6 rounded-2xl shadow-sm hover-card max-w-4xl w-full text-center">
+                    <span class="iconify text-unad-teal mx-auto mb-2" data-icon="lucide:anchor" data-width="32"></span>
+                    <p class="font-bold text-base md:text-lg text-unad-navy dark:text-white leading-relaxed italic">"Gestión integral de la salud, el bienestar y la producción animal para contribuir a la salud pública, la seguridad alimentaria, la sostenibilidad de los territorios y la conservación de los ecosistemas, mediante la comprensión de las interacciones entre los animales, los seres humanos y el ambiente desde el enfoque Una sola salud (One Health)"</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl w-full">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-xl border-l-4 border-unad-orange shadow-sm hover-card flex flex-col">
+                        <span class="text-xs font-bold text-unad-orange uppercase tracking-wider mb-2 flex items-center gap-2"><span class="iconify" data-icon="lucide:alert-triangle" data-width="16"></span> Manifestaciones del Problema</span>
+                        <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-disc pl-4 mt-2">
+                            <li>Necesidad de optimizar la salud, bienestar y productividad animal garantizando seguridad alimentaria y sostenibilidad territorial.</li>
+                            <li>Necesidad de prevenir y controlar enfermedades animales y zoonóticas mediante vigilancia y gestión sanitaria bajo el enfoque Una Salud.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-unad-teal text-white p-5 rounded-xl shadow-md border border-white/20 hover-card flex flex-col justify-center">
+                        <span class="text-xs font-bold text-unad-orange uppercase tracking-wider mb-2 flex items-center gap-2"><span class="iconify" data-icon="lucide:help-circle" data-width="16"></span> Pregunta Generadora</span>
+                        <p class="text-sm font-medium italic">¿Cómo abordar integralmente las problemáticas sanitarias, productivas, ambientales y sociales que emergen en la interacción entre animales, seres humanos y ambiente, para promover la salud y el bienestar animal, fortalecer la salud pública veterinaria y contribuir al desarrollo sostenible de los territorios desde el enfoque Una Salud (One Health)?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia epistémica del NIP como eje articulador del currículo.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Estructura NIP-NP detallada en el Documento Maestro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:layers" data-width="32"></span>
+                    Núcleos Problémicos (NP) y Competencias
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex items-center justify-center">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl w-full">
+                    <!-- NP 1 -->
+                    <div class="bg-white/60 dark:bg-black/40 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card flex flex-col h-full">
+                        <div class="bg-unad-teal text-white p-4 flex items-start gap-3">
+                            <span class="iconify shrink-0 mt-1" data-icon="lucide:stethoscope" data-width="24"></span>
+                            <h3 class="font-bold text-sm">NP 1. Salud animal: fundamentos biológicos, diagnóstico y atención veterinaria</h3>
+                        </div>
+                        <div class="p-5 flex flex-col gap-4">
+                            <div>
+                                <span class="text-xs font-bold text-unad-teal uppercase block mb-1">Competencia 1</span>
+                                <p class="text-sm text-gray-700 dark:text-gray-300">Analiza los procesos biológicos, fisiológicos, inmunológicos y patológicos que intervienen en la salud y la enfermedad animal para interpretar sus manifestaciones y sustentar la toma de decisiones.</p>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                                <span class="text-xs font-bold text-unad-teal uppercase block mb-1">Competencia 2</span>
+                                <p class="text-sm text-gray-700 dark:text-gray-300">Evalúa el estado de salud animal mediante el método clínico, integrando anamnesis, examen clínico, ayudas diagnósticas y evidencia para sustentar la prevención, diagnóstico y tratamiento ético.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- NP 2 -->
+                    <div class="bg-white/60 dark:bg-black/40 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card flex flex-col h-full">
+                        <div class="bg-unad-green text-white p-4 flex items-start gap-3">
+                            <span class="iconify shrink-0 mt-1" data-icon="lucide:globe" data-width="24"></span>
+                            <h3 class="font-bold text-sm">NP 2. Salud poblacional, producción y sostenibilidad (One Health)</h3>
+                        </div>
+                        <div class="p-5 flex flex-col gap-4">
+                            <div>
+                                <span class="text-xs font-bold text-unad-green uppercase block mb-1">Competencia 3</span>
+                                <p class="text-sm text-gray-700 dark:text-gray-300">Analiza factores epidemiológicos, sanitarios y ambientales de enfermedades animales y zoonóticas para sustentar prevención, vigilancia y control orientadas a sanidad y salud pública.</p>
+                            </div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                                <span class="text-xs font-bold text-unad-green uppercase block mb-1">Competencia 4</span>
+                                <p class="text-sm text-gray-700 dark:text-gray-300">Integra factores productivos, nutricionales, genéticos, reproductivos y de bienestar para sustentar acciones de sostenibilidad y eficiencia en sistemas de producción (One Health).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Articulación directa de los Núcleos con las competencias de egreso.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Matriz C3. NIP-NP Documento Maestro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-spin" data-icon="lucide:git-merge" data-width="28" style="animation-duration: 15s;"></span>
+                    Alineación: Competencias, RAPs y Red Curricular
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                <table class="styled-table w-full text-xs">
+                    <thead>
+                        <tr>
+                            <th class="w-1/4">COMPETENCIAS DEL EGRESADO</th>
+                            <th class="w-2/4">RESULTADO DE APRENDIZAJE (RAP)</th>
+                            <th class="w-1/4">RED CURRICULAR (Cursos Base)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-800 dark:text-gray-200">
+                        <tr>
+                            <td class="font-bold">Competencia 1.<br><span class="font-normal text-[11px] mt-1 block">Procesos biológicos, fisiológicos, inmunológicos y patológicos.</span></td>
+                            <td>
+                                <strong>RAP 1:</strong> Analizar la organización estructural y funcional para interpretar procesos biológicos y fisiológicos.<br><br>
+                                <strong>RAP 2:</strong> Analizar mecanismos etiológicos e inmunológicos en la presentación de enfermedades.
+                            </td>
+                            <td class="text-[11px]">Introducción a MV, Anatomía, Fisiología, Inmunología, Genética, Microbiología, Virología, Parasitología, Patología.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Competencia 2.<br><span class="font-normal text-[11px] mt-1 block">Método clínico, diagnóstico y tratamiento ético.</span></td>
+                            <td>
+                                <strong>RAP 3:</strong> Evaluar información clínica (anamnesis, examen, ayudas) para sustentar hipótesis diagnósticas.<br><br>
+                                <strong>RAP 4:</strong> Integrar evidencia clínica para prevención, diagnóstico, tratamiento y seguimiento.
+                            </td>
+                            <td class="text-[11px]">Semiología, Imagenología, Farmacología, Toxicología, Medicina Interna (Pequeños, Equinos, Rumiantes), Cirugía, Rotaciones Clínicas.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Competencia 3.<br><span class="font-normal text-[11px] mt-1 block">Epidemiología, sanidad y salud pública.</span></td>
+                            <td>
+                                <strong>RAP 5:</strong> Interpretar información epidemiológica para identificar riesgos de enfermedades y zoonosis (One Health).
+                            </td>
+                            <td class="text-[11px]">Epidemiología, Enfoque One Health, Bioética, Legislación, Rotación Vigilancia Sanitaria.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold">Competencia 4.<br><span class="font-normal text-[11px] mt-1 block">Producción sostenible y bienestar animal.</span></td>
+                            <td>
+                                <strong>RAP 6:</strong> Evaluar factores nutricionales, genéticos, reproductivos y de bienestar para la sostenibilidad de sistemas.
+                            </td>
+                            <td class="text-[11px]">Nutrición, Biotecnologías, Etología, Producción Aviar/Porcina, Rotaciones de Producción.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia integral de los componentes meso y microcurriculares.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Matriz de Relación Perfiles-RAP-Cursos verificada.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:layout-list" data-width="28"></span>
+                    Detalle del Plan de Estudios (I a X Período)
+                </h2>
+                <span class="bg-unad-teal text-white px-3 py-1 text-xs rounded-full font-bold uppercase tracking-wider">174 Créditos Totales</span>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                <table class="styled-table w-full text-[11px] md:text-xs">
+                    <thead>
+                        <tr>
+                            <th class="w-2/5">Curso</th>
+                            <th class="text-center">Tipo</th>
+                            <th class="text-center">Créd.</th>
+                            <th class="text-center">Obl/Ele</th>
+                            <th class="text-center">T. Directo (h)</th>
+                            <th class="text-center">T. Indep. (h)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-800 dark:text-gray-200">
+                        <!-- P1 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico I</td></tr>
+                        <tr><td>Introducción a la Medicina veterinaria</td><td class="text-center">M</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Biología celular y molecular</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Química orgánica</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Fundamentos del enfoque One Health</td><td class="text-center">M</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Cátedra unadista</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Competencias comunicativas</td><td class="text-center">T</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Ética y ciudadanía (grado)</td><td class="text-center">T</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        
+                        <!-- P2 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico II</td></tr>
+                        <tr><td>Anatomía veterinaria comparada</td><td class="text-center">P</td><td class="text-center">4</td><td class="text-center">Obl</td><td class="text-center">39</td><td class="text-center">157</td></tr>
+                        <tr><td>Biología del desarrollo y fisiología animal</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Bioquímica metabólica</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Bioética y legislación veterinaria</td><td class="text-center">M</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Pensamiento lógico y matemático</td><td class="text-center">T</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Herramientas digitales para la gestión del conocimiento</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+
+                        <!-- P3 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico III</td></tr>
+                        <tr><td>Inmunología</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Nutrición clínica</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Genética y Genómica Aplicada a la MV.</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Estadística Descriptiva Aplicada a las Ciencias Agrarias</td><td class="text-center">T</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Semiología y Competencias Clínicas Veterinarias</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Transformación Digital y Tecnologías Emergentes en MV</td><td class="text-center">M</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Patología general y sistémica</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Prestación del Servicio Social Unadista</td><td class="text-center">M</td><td class="text-center">0</td><td class="text-center">Obl</td><td class="text-center">0</td><td class="text-center">0</td></tr>
+
+                        <!-- P4 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico IV</td></tr>
+                        <tr><td>Patología diagnóstica y de laboratorio clínico</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Microbiología veterinaria</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Virología animal</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Parasitología veterinaria</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Diseño experimental</td><td class="text-center">T</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Etología y bienestar animal</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Fundamentos en gestión integral</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Electiva campo de formación complementaria I (FC)</td><td class="text-center">T</td><td class="text-center">1</td><td class="text-center">Ele</td><td class="text-center">32</td><td class="text-center">16</td></tr>
+
+                        <!-- P5 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico V</td></tr>
+                        <tr><td>Farmacología y terapéutica veterinaria</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Toxicología veterinaria</td><td class="text-center">M</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Epidemiología veterinaria</td><td class="text-center">T</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Imagenología veterinaria</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">39</td><td class="text-center">105</td></tr>
+                        <tr><td>Medicina interna de pequeñas especies</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">39</td><td class="text-center">105</td></tr>
+                        <tr><td>Técnica quirúrgica</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Electiva disciplinar común I (DC)</td><td class="text-center">T</td><td class="text-center">2</td><td class="text-center">Ele</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+
+                        <!-- P6 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico VI</td></tr>
+                        <tr><td>Medicina interna de equinos</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">39</td><td class="text-center">105</td></tr>
+                        <tr><td>Medicina interna de rumiantes</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">39</td><td class="text-center">105</td></tr>
+                        <tr><td>Cirugía de pequeñas especies</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">39</td><td class="text-center">105</td></tr>
+                        <tr><td>Anestesiología veterinaria</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Reproducción animal</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">39</td><td class="text-center">105</td></tr>
+                        <tr><td>Línea de profundización I (Específica)</td><td class="text-center">T/P</td><td class="text-center">3</td><td class="text-center">Ele</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+
+                        <!-- P7 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico VII</td></tr>
+                        <tr><td>Cirugía de grandes especies</td><td class="text-center">P</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">39</td><td class="text-center">105</td></tr>
+                        <tr><td>Medicina de especies aviares</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Medicina de fauna silvestre y exótica</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Biotecnología de la reproducción</td><td class="text-center">P</td><td class="text-center">2</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+                        <tr><td>Salud pública veterinaria y zoonosis</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Línea de profundización II (Específica)</td><td class="text-center">T/P</td><td class="text-center">3</td><td class="text-center">Ele</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Electiva disciplinar común II (DC)</td><td class="text-center">T</td><td class="text-center">3</td><td class="text-center">Ele</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+
+                        <!-- P8 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico VIII</td></tr>
+                        <tr><td class="font-semibold text-unad-orange">Rotación Clínica de pequeños animales</td><td class="text-center font-semibold">P</td><td class="text-center font-semibold">4</td><td class="text-center font-semibold">Obl</td><td class="text-center">144</td><td class="text-center">48</td></tr>
+                        <tr><td class="font-semibold text-unad-orange">Rotación Clínica de grandes animales (equinos/rumiantes)</td><td class="text-center font-semibold">P</td><td class="text-center font-semibold">4</td><td class="text-center font-semibold">Obl</td><td class="text-center">144</td><td class="text-center">48</td></tr>
+                        <tr><td>Gestión y administración en salud animal</td><td class="text-center">M</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Línea de profundización III (Específica)</td><td class="text-center">T/P</td><td class="text-center">3</td><td class="text-center">Ele</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Electiva formación complementaria II (FC)</td><td class="text-center">T</td><td class="text-center">2</td><td class="text-center">Ele</td><td class="text-center">32</td><td class="text-center">64</td></tr>
+
+                        <!-- P9 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico IX</td></tr>
+                        <tr><td class="font-semibold text-unad-green">Rotación sistemas de producción animal</td><td class="text-center font-semibold">P</td><td class="text-center font-semibold">4</td><td class="text-center font-semibold">Obl</td><td class="text-center">144</td><td class="text-center">48</td></tr>
+                        <tr><td class="font-semibold text-unad-green">Rotación Reproducción y biotecnología</td><td class="text-center font-semibold">P</td><td class="text-center font-semibold">4</td><td class="text-center font-semibold">Obl</td><td class="text-center">144</td><td class="text-center">48</td></tr>
+                        <tr><td>Seminario de investigación</td><td class="text-center">T</td><td class="text-center">3</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+                        <tr><td>Electiva disciplinar específica libre (DE)</td><td class="text-center">T/P</td><td class="text-center">3</td><td class="text-center">Ele</td><td class="text-center">32</td><td class="text-center">112</td></tr>
+
+                        <!-- P10 -->
+                        <tr class="bg-gray-100 dark:bg-gray-800 font-bold"><td colspan="6" class="text-unad-teal dark:text-unad-orange uppercase">Período Académico X</td></tr>
+                        <tr><td class="font-semibold text-unad-teal">Rotación One Health y Vigilancia Sanitaria</td><td class="text-center font-semibold">P</td><td class="text-center font-semibold">4</td><td class="text-center font-semibold">Obl</td><td class="text-center">144</td><td class="text-center">48</td></tr>
+                        <tr><td class="font-semibold text-unad-teal">Rotación de profundización (Libre)</td><td class="text-center font-semibold">P</td><td class="text-center font-semibold">4</td><td class="text-center font-semibold">Obl</td><td class="text-center">144</td><td class="text-center">48</td></tr>
+                        <tr><td>Opción de Grado</td><td class="text-center">T</td><td class="text-center">4</td><td class="text-center">Obl</td><td class="text-center">32</td><td class="text-center">160</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Viabilidad de la distribución de créditos, horas y metodologías.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Plan de estudios oficial en documento maestro y sistema institucional.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:pie-chart" data-width="28"></span>
+                    Estructura Curricular y Campos de Formación
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col items-center justify-center gap-6">
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
+                    <div class="bg-unad-teal text-white p-4 rounded-xl text-center shadow-md hover-card"><span class="text-3xl font-bold font-display block">174</span><span class="text-xs uppercase">Créditos Totales</span></div>
+                    <div class="bg-unad-navy text-white p-4 rounded-xl text-center shadow-md hover-card"><span class="text-3xl font-bold font-display block">151</span><span class="text-xs uppercase">Obligatorios (87%)</span></div>
+                    <div class="bg-unad-orange text-white p-4 rounded-xl text-center shadow-md hover-card"><span class="text-3xl font-bold font-display block">23</span><span class="text-xs uppercase">Electivos (13%)</span></div>
+                    <div class="bg-unad-green text-white p-4 rounded-xl text-center shadow-md hover-card"><span class="text-3xl font-bold font-display block">10</span><span class="text-xs uppercase">Períodos Académicos</span></div>
+                </div>
+
+                <div class="bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700 w-full max-w-4xl">
+                    <table class="styled-table w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th>Campo de Formación (Acuerdo 001 de 2013)</th>
+                                <th class="text-center">Tipo de Cursos</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-800 dark:text-gray-200">
+                            <tr>
+                                <td class="font-bold border-l-4 border-unad-teal pl-3">Campo de Formación Disciplinar - Común</td>
+                                <td>Biología Celular, Química, Bioquímica, Estadística, Inglés (A1-B2), Investigación, Diseño de Proyectos.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold border-l-4 border-unad-orange pl-3">Campo de Formación Disciplinar - Específico</td>
+                                <td>Anatomía, Inmunología, Semiología, Patología, Farmacología, Rotaciones Clínicas, Rotaciones de Producción y One Health.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold border-l-4 border-unad-green pl-3">Electividad Disciplinar y Complementaria</td>
+                                <td>Cursos IBC, Electivos Disciplinares Comunes (DC), Disciplinares Específicos (DE) y Formación Complementaria (FC).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Equilibrio entre componentes disciplinar, básico y electivo.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Matriz de Estructura Curricular (Acuerdo 001 de 2013).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-spin" data-icon="lucide:git-branch" data-width="32" style="animation-duration: 10s;"></span>
+                    Ruta de la Electividad (Líneas de Profundización)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-5">
+                <p class="text-sm text-center text-gray-700 dark:text-gray-300 mb-2">Los estudiantes deben optar por <strong>solo una línea de profundización</strong> (3 cursos de 3 créditos cada uno = 9 créditos específicos) para cumplir su plan.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto w-full">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-t-4 border-unad-teal hover-card shadow-sm h-full flex flex-col">
+                        <span class="iconify text-unad-teal mx-auto mb-2" data-icon="lucide:tree-pine" data-width="28"></span>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white text-center mb-3">Línea I. Fauna Silvestre</h3>
+                        <ul class="text-xs text-gray-700 dark:text-gray-300 space-y-2 flex-1">
+                            <li class="border-b border-gray-200 dark:border-gray-700 pb-1">Conservación y Gestión de Fauna Silvestre y Exótica</li>
+                            <li class="border-b border-gray-200 dark:border-gray-700 pb-1">Bienestar y Manejo Sostenible de Fauna Silvestre</li>
+                            <li>Rehabilitación y Restablecimiento de Fauna en Ecosistemas</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-t-4 border-unad-green hover-card shadow-sm h-full flex flex-col">
+                        <span class="iconify text-unad-green mx-auto mb-2" data-icon="lucide:globe" data-width="28"></span>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white text-center mb-3">Línea II. Salud Pública y One Health</h3>
+                        <ul class="text-xs text-gray-700 dark:text-gray-300 space-y-2 flex-1">
+                            <li class="border-b border-gray-200 dark:border-gray-700 pb-1">Inocuidad alimentaria</li>
+                            <li class="border-b border-gray-200 dark:border-gray-700 pb-1">Salud de hato y gestión sanitaria</li>
+                            <li>Prevención, Vigilancia y Control de Zoonosis</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-t-4 border-unad-orange hover-card shadow-sm h-full flex flex-col">
+                        <span class="iconify text-unad-orange mx-auto mb-2" data-icon="lucide:hospital" data-width="28"></span>
+                        <h3 class="font-bold text-sm text-unad-navy dark:text-white text-center mb-3">Línea III. Gestión Integral Veterinaria</h3>
+                        <ul class="text-xs text-gray-700 dark:text-gray-300 space-y-2 flex-1">
+                            <li class="border-b border-gray-200 dark:border-gray-700 pb-1">Especies menores y no convencionales</li>
+                            <li class="border-b border-gray-200 dark:border-gray-700 pb-1">Gestión y Administración de Servicios Veterinarios</li>
+                            <li>Geriatría veterinaria</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-unad-navy text-white p-4 rounded-xl border border-white/20 max-w-5xl mx-auto w-full mt-2">
+                    <p class="text-xs font-bold text-unad-orange uppercase tracking-wider mb-2 flex items-center gap-2"><span class="iconify" data-icon="lucide:layers" data-width="16"></span> Otras Electivas (14 Créditos restates)</p>
+                    <p class="text-xs text-gray-300 leading-relaxed"><strong>IBC (6 créd):</strong> Educación ambiental, Inclusión Social, Sostenibilidad. <strong>DC (5 créd):</strong> Animales de compañía, Topografía, Economía agraria, Gestión ambiental. <strong>FC (3 créd):</strong> Alimentación, Derechos de animales, Guitarra, etc.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Flexibilidad curricular y opciones de profundización profesional.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Ruta de Electividad definida y estructurada metodológicamente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:check-square" data-width="28"></span>
+                    Mecanismos de Evaluación y Evidencias (RAP)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                <table class="styled-table w-full text-xs">
+                    <thead>
+                        <tr>
+                            <th class="w-1/4">RESULTADO DE APRENDIZAJE</th>
+                            <th class="w-1/3">MECANISMOS DE EVALUACIÓN</th>
+                            <th class="w-2/5">EVIDENCIAS DE LOGRO (Productos)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-800 dark:text-gray-200">
+                        <tr>
+                            <td class="font-bold text-unad-teal">RAP 1 y 2: Ciencias Básicas, Biomédicas y Diagnósticas</td>
+                            <td>Pruebas integradoras, OSCE básico, análisis de casos (ABC), rúbricas de razonamiento fisiopatológico, evaluación de prácticas.</td>
+                            <td>Informes de laboratorio, mapas conceptuales, portafolio académico integrador, análisis de resultados diagnósticos.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold text-unad-teal">RAP 3 y 4: Clínica, Diagnóstico y Tratamiento</td>
+                            <td>OSCE (Examen Clínico Objetivo), rúbricas clínicas, sustentación oral de planes terapéuticos, listas de cotejo en rotación.</td>
+                            <td>Historias clínicas, hipótesis diagnósticas argumentadas, planes terapéuticos sustentados, reportes de rotación clínica.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold text-unad-green">RAP 5: Epidemiología y One Health</td>
+                            <td>Evaluación de Proyecto Integrador de Vigilancia, análisis de brotes, construcción de mapas de riesgo, sustentación de casos.</td>
+                            <td>Diagnósticos sanitarios territoriales, informes epidemiológicos, mapas de riesgo sanitario, propuestas de prevención.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold text-unad-orange">RAP 6: Producción y Sostenibilidad</td>
+                            <td>Evaluación de indicadores productivos y bienestar, rúbricas de sostenibilidad, proyectos integradores pecuarios.</td>
+                            <td>Planes de mejoramiento genético/reproductivo, diagnósticos de sistemas de producción, evaluaciones de bienestar animal.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Sistema de evaluación de RAPs demostrable, trazable y robusto.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Puntos de control (OSCE, Portafolios, Proyectos Integradores).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-pulse" data-icon="lucide:globe-2" data-width="28"></span>
+                    Plan de Internacionalización (Metas a 7 años)
+                </h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700">
+                <table class="styled-table w-full text-[11px] md:text-xs">
+                    <thead>
+                        <tr>
+                            <th class="w-1/4">META (7 Años)</th>
+                            <th class="w-1/4">PRODUCTO A OBTENER</th>
+                            <th class="w-2/4">ACTIVIDADES CLAVE</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-800 dark:text-gray-200">
+                        <tr>
+                            <td class="font-bold border-l-4 border-unad-teal pl-2">Participar en 21 eventos internacionales (3/año)</td>
+                            <td>Certificados, ponencias, posters.</td>
+                            <td>Gestionar participación en congresos/simposios sobre salud animal y One Health.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold border-l-4 border-unad-teal pl-2">Competencias bilingües en el 40% de cursos</td>
+                            <td>Lecturas científicas, guías en inglés.</td>
+                            <td>Incorporar glosarios técnicos y evaluaciones bilingües (3 cursos/año).</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold border-l-4 border-unad-orange pl-2">Vincularse a 3 nuevas redes de investigación</td>
+                            <td>Membresías, planes de trabajo de red.</td>
+                            <td>Identificar redes globales y participar en proyectos colaborativos.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold border-l-4 border-unad-orange pl-2">Vincular al menos 14 profesores internacionales</td>
+                            <td>Clases espejo, conferencias, seminarios.</td>
+                            <td>Gestión de convenios y programación de eventos (2/año).</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold border-l-4 border-unad-green pl-2">Implementar 14 experiencias COIL</td>
+                            <td>Productos colaborativos interculturales.</td>
+                            <td>Clases espejo y proyectos con universidades extranjeras (2/año).</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold border-l-4 border-unad-green pl-2">Movilidad de 35 estudiantes</td>
+                            <td>Certificados, homologaciones.</td>
+                            <td>Convocatorias de movilidad presencial y virtual (5/año).</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold border-l-4 border-unad-navy dark:border-gray-400 pl-2">Formalizar 7 convenios de cooperación</td>
+                            <td>Convenios firmados.</td>
+                            <td>Negociaciones y seguimiento a acuerdos interinstitucionales (1/año).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Existencia de estrategias de visibilidad nacional e internacional.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Plan de Internacionalización articulado y presupuestado.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </main>
 
-<script src="js/embed-mode.js"></script>
-<script src="js/theme.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const isEmbed = urlParams.get('embed') === '1';
+    
+    if (isEmbed) {
+        const nav = document.getElementById('main-nav');
+        const sideNav = document.getElementById('side-nav');
+        if (nav) nav.style.display = 'none';
+        if (sideNav) sideNav.style.display = 'none';
+        document.querySelectorAll('.slide').forEach(s => {
+            s.style.paddingTop = '1.5rem';
+        });
+    }
+
+    const themeBtn = document.getElementById('theme-btn');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            themeBtn.innerHTML = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+        });
+    }
+
+    gsap.registerPlugin(Observer);
+
+    const slides = document.querySelectorAll('.slide');
+    const dotContainer = document.getElementById('dot-container');
+    let currentIndex = 0;
+    let isAnimating = false;
+
+    // Títulos para los Tooltips de cada diapositiva
+    const slideTitles = [
+        "Contexto y Objetivo",
+        "Propósito e Ingreso",
+        "Perfil de Formación y Egreso",
+        "Perfil Ocupacional",
+        "Núcleo Integrador (NIP)",
+        "Núcleos Problémicos",
+        "Alineación Curricular",
+        "Plan de Estudios (I - X)",
+        "Estructura Curricular",
+        "Ruta de Electividad",
+        "Mecanismos de Evaluación",
+        "Internacionalización"
+    ];
+
+    if (!isEmbed && dotContainer) {
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.setAttribute('data-title', slideTitles[i] || `Slide ${i+1}`); // Agrega el data-title para el Tooltip
+            dot.addEventListener('click', () => gotoSlide(i, i > currentIndex ? 1 : -1));
+            dotContainer.appendChild(dot);
+        });
+    }
+    const dots = document.querySelectorAll('.dot');
+
+    function updateDots() {
+        if(isEmbed) return;
+        dots.forEach((dot, i) => {
+            if (i === currentIndex) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+    }
+
+    gsap.set(slides, { yPercent: 100, autoAlpha: 0 });
+    gsap.set(slides[0], { yPercent: 0, autoAlpha: 1 });
+    updateDots();
+    animateElementsIn(slides[0]);
+
+    function animateElementsIn(slide) {
+        const elements = slide.querySelectorAll('.gsap-reveal');
+        if(elements.length > 0) {
+            gsap.fromTo(elements,
+                { y: 30, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.06, ease: "power3.out", overwrite: "auto", delay: 0.05 }
+            );
+        }
+    }
+
+    function gotoSlide(index, direction) {
+        if (isAnimating || index < 0 || index >= slides.length || index === currentIndex) return;
+        isAnimating = true;
+
+        const currentSlide = slides[currentIndex];
+        const nextSlide = slides[index];
+
+        const yPercentOut = direction === 1 ? -100 : 100;
+        const yPercentIn = direction === 1 ? 100 : -100;
+
+        gsap.set(nextSlide, { yPercent: yPercentIn, autoAlpha: 1 });
+
+        const tl = gsap.timeline({
+            defaults: { duration: 0.7, ease: "power4.inOut" },
+            onComplete: () => {
+                gsap.set(currentSlide, { autoAlpha: 0 });
+                currentIndex = index;
+                updateDots();
+                isAnimating = false;
+            }
+        });
+
+        tl.to(currentSlide, { yPercent: yPercentOut })
+          .to(nextSlide, { yPercent: 0 }, "<");
+
+        animateElementsIn(nextSlide);
+    }
+
+    Observer.create({
+        type: "wheel,touch,pointer",
+        wheelSpeed: -1,
+        tolerance: 40,
+        preventDefault: false,
+        onDown: () => gotoSlide(currentIndex - 1, -1),
+        onUp: () => gotoSlide(currentIndex + 1, 1),
+    });
+
+    document.querySelectorAll('.custom-scroll').forEach(el => {
+        el.addEventListener('wheel', (e) => {
+            const isAtTop = el.scrollTop === 0;
+            const isAtBottom = Math.abs((el.scrollHeight - el.scrollTop) - el.clientHeight) < 2;
+
+            if ((e.deltaY < 0 && !isAtTop) || (e.deltaY > 0 && !isAtBottom)) {
+                e.stopPropagation();
+            }
+        }, {passive: false});
+        
+        el.addEventListener('touchmove', (e) => {
+            e.stopPropagation(); 
+        }, {passive: false});
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+            e.preventDefault();
+            gotoSlide(currentIndex + 1, 1);
+        } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault();
+            gotoSlide(currentIndex - 1, -1);
+        }
+    });
+
+    if(!isEmbed) {
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        if(btnUp) btnUp.addEventListener('click', () => gotoSlide(currentIndex - 1, -1));
+        if(btnDown) btnDown.addEventListener('click', () => gotoSlide(currentIndex + 1, 1));
+    }
+</script>
 </body>
 </html>

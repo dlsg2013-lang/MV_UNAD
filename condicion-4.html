@@ -1,51 +1,1669 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Condición 4 · Programa académico</title>
-<meta name="description" content="Condición 4 del programa." />
+<title>Condición 4 · Organización de actividades académicas y proceso formativo</title>
+<meta name="description" content="Condición 4 del programa de Medicina Veterinaria - UNAD" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css" />
-<link rel="stylesheet" href="css/condicion.css" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+        theme: {
+            extend: {
+                colors: {
+                    unad: {
+                        teal: '#00445B',
+                        navy: '#01333F',
+                        green: '#035B3B',
+                        orange: '#D26714',
+                        base: '#EAEAEA',
+                        darkbg: '#0a1922'
+                    }
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    display: ['Montserrat', 'sans-serif'],
+                }
+            }
+        }
+    }
+</script>
+
+<!-- GSAP & Observer -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script>
+
+<!-- Iconify -->
+<script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+
+<style>
+    body {
+        background-color: #EAEAEA;
+        color: #01333F;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .dark body { background-color: #0a1922; color: #EAEAEA; }
+
+    /* Textura de lienzo sutil */
+    body::before {
+        content: "";
+        position: fixed; inset: 0; z-index: 1; pointer-events: none;
+        background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+        opacity: 0.04; mix-blend-mode: multiply;
+    }
+    .dark body::before { opacity: 0.02; mix-blend-mode: screen; }
+
+    /* Orbes ambientales animados */
+    .orb {
+        position: fixed; border-radius: 50%; filter: blur(140px);
+        z-index: 0; opacity: 0.6; pointer-events: none;
+    }
+    .orb--navy { background: #00445B; animation: float1 20s ease-in-out infinite; }
+    .orb--orange { background: #D26714; animation: float2 25s ease-in-out infinite reverse; opacity: 0.4; }
+    @keyframes float1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(5vw, 5vh) scale(1.1); } }
+    @keyframes float2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-5vw, -5vh) scale(1.1); } }
+
+    /* Navegación superior */
+    .sitenav {
+        position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+        width: 92%; max-width: 1500px; z-index: 50;
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0.75rem 1.5rem; border-radius: 1rem;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 20px rgba(1, 51, 63, 0.05);
+        transition: all 0.3s ease;
+    }
+    .dark .sitenav {
+        background: rgba(1, 51, 63, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .sitenav__brand {
+        display: flex; align-items: center; gap: 0.75rem;
+        font-family: 'Montserrat', sans-serif; font-weight: 700;
+        color: #01333F; text-decoration: none;
+    }
+    .dark .sitenav__brand { color: #ffffff; }
+    .sitenav__brand small { display: block; font-size: 0.75rem; font-weight: 500; color: #00445B; }
+    .dark .sitenav__brand small { color: #D26714; }
+    .sitenav__right { display: flex; align-items: center; gap: 1.5rem; }
+    .sitenav__links { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.875rem; font-weight: 600; }
+    .sitenav__links a { color: #01333F; text-decoration: none; transition: color 0.2s; }
+    .dark .sitenav__links a { color: #EAEAEA; }
+    .sitenav__links a:hover { color: #D26714; }
+    .sitenav__links a[aria-current="page"] { color: #D26714; border-bottom: 2px solid #D26714; padding-bottom: 2px; }
+    .theme-toggle {
+        background: none; border: none; cursor: pointer; font-size: 1.25rem;
+        display: flex; align-items: center; justify-content: center;
+        width: 36px; height: 36px; border-radius: 50%;
+        background-color: rgba(0,0,0,0.05); transition: background-color 0.2s;
+    }
+    .dark .theme-toggle { background-color: rgba(255,255,255,0.1); }
+
+    /* Slider */
+    .slider-container { position: relative; width: 100vw; height: 100vh; z-index: 10; }
+    .slide {
+        position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+        visibility: hidden; display: flex; flex-direction: column;
+        justify-content: center; align-items: center;
+        padding: 5rem 2rem 2rem 2rem;
+    }
+    .glass-panel {
+        width: 100%; max-width: 95vw; height: 86vh;
+        backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 10px 40px rgba(1, 51, 63, 0.08);
+        border-radius: 1.5rem; padding: 2rem;
+        display: flex; flex-direction: column;
+        transition: all 0.3s ease;
+    }
+    .dark .glass-panel {
+        background: rgba(1, 51, 63, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Scrollbars */
+    .custom-scroll { overflow-y: auto; overflow-x: hidden; padding-right: 10px; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(0,68,91,0.05); border-radius: 10px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(0,68,91,0.2); border-radius: 10px; }
+    .dark .custom-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+    .dark .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+
+    /* Side Nav (Dots) — SIN overflow para permitir tooltip */
+    .sidenav-dots {
+        position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+        z-index: 50; display: flex; flex-direction: column; align-items: center; gap: 4px;
+        background: rgba(255,255,255,0.5); backdrop-filter: blur(8px);
+        padding: 10px 6px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.3);
+    }
+    .dark .sidenav-dots { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
+    .nav-btn {
+        background: none; border: none; cursor: pointer; color: inherit;
+        padding: 2px; display: flex; align-items: center; justify-content: center;
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #00445B; opacity: 0.3; transition: all 0.3s; }
+    .dark .dot { background: #EAEAEA; }
+    .dot.active { opacity: 1; height: 18px; border-radius: 4px; background: #D26714; }
+
+    /* Wrapper de cada dot con tooltip */
+    .dot-wrapper {
+        position: relative;
+        min-height: 18px;
+        padding: 3px 4px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.2s ease;
+    }
+    .dot-wrapper:hover .dot { transform: scale(1.6); opacity: 0.85; }
+    .dot-wrapper:hover .dot.active { transform: none; }
+
+    /* Tooltip (aparece a la izquierda del dot) */
+    .dot-wrapper::after {
+        content: attr(data-title);
+        position: absolute;
+        right: calc(100% + 14px);
+        top: 50%;
+        transform: translateY(-50%) translateX(6px) scale(0.96);
+        background: #01333F;
+        color: #ffffff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s ease, transform 0.22s ease;
+        box-shadow: 0 6px 18px rgba(1,51,63,0.30);
+        z-index: 100;
+    }
+    .dot-wrapper::before {
+        content: '';
+        position: absolute;
+        right: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%) translateX(6px);
+        width: 0; height: 0;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 6px solid #01333F;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s ease, transform 0.22s ease;
+        z-index: 100;
+    }
+    .dot-wrapper:hover::after { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
+    .dot-wrapper:hover::before { opacity: 1; transform: translateY(-50%) translateX(0); }
+    .dark .dot-wrapper::after { background: #D26714; }
+    .dark .dot-wrapper::before { border-left-color: #D26714; }
+
+    /* Tablas */
+    .styled-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+    .styled-table th {
+        background-color: #00445B; color: white; padding: 12px; font-weight: 600;
+        text-transform: uppercase; font-size: 0.75rem; position: sticky; top: 0; z-index: 10;
+    }
+    .styled-table td { padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.1); vertical-align: top; }
+    .dark .styled-table td { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .styled-table tr:hover td { background-color: rgba(0,68,91,0.03); }
+    .dark .styled-table tr:hover td { background-color: rgba(255,255,255,0.03); }
+
+    /* Tarjetas */
+    .hover-card { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s; }
+    .hover-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px -8px rgba(0, 68, 91, 0.15); border-color: #D26714; }
+</style>
 </head>
 <body>
 
-<div class="orb orb--navy"   style="width:480px;height:480px;top:-160px;left:-140px;"></div>
+<div class="orb orb--navy" style="width:480px;height:480px;top:-160px;left:-140px;"></div>
 <div class="orb orb--orange" style="width:420px;height:420px;bottom:-180px;right:10vw;"></div>
 
-<nav class="sitenav">
-  <a class="sitenav__brand" href="index.html">Med. Veterinaria <small>Programa académico</small></a>
-  <div class="sitenav__right">
-    <ul class="sitenav__links">
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="malla-academica.html">Malla académica</a></li>
-      <li><a href="condicion-4.html" aria-current="page">Condición 4</a></li>
-    </ul>
-    <button class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro">🌙</button>
-  </div>
+<nav class="sitenav" id="main-nav">
+    <a class="sitenav__brand" href="index.html">
+        <div class="w-10 h-10 rounded bg-unad-teal text-white flex items-center justify-center font-bold font-display shadow-md mr-1">MV</div>
+        <div>Med. Veterinaria <small>Programa académico</small></div>
+    </a>
+    <div class="sitenav__right">
+        <ul class="sitenav__links hidden md:flex">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="malla-academica.html">Malla académica</a></li>
+            <li><a href="condicion-4.html" aria-current="page">Condición 4</a></li>
+        </ul>
+        <button class="theme-toggle" id="theme-btn" type="button" aria-label="Cambiar tema">🌙</button>
+    </div>
 </nav>
 
-<header class="cond-hero">
-  <p class="cond-hero__eyebrow">Sección independiente</p>
-  <h1>Condición 4</h1>
-  <p>Esta página es completamente independiente: tiene su propia URL y se puede insertar sola en Canva o Genially usando el enlace de embed (ver README).</p>
-</header>
+<aside class="sidenav-dots" id="side-nav">
+    <button class="nav-btn" id="btn-up" aria-label="Subir">
+        <span class="iconify text-unad-teal dark:text-white" data-icon="lucide:chevron-up" data-width="18"></span>
+    </button>
+    <div id="dot-container" class="flex flex-col gap-1 py-1"></div>
+    <button class="nav-btn" id="btn-down" aria-label="Bajar">
+        <span class="iconify text-unad-teal dark:text-white" data-icon="lucide:chevron-down" data-width="18"></span>
+    </button>
+</aside>
 
-<main class="cond-body">
-  <div class="cond-body__placeholder">
-    Aquí va el contenido de la <strong>Condición 4</strong>. Cuéntame qué debe llevar
-    (texto, tabla, checklist, imagen, video) y lo reemplazo por el diseño final —
-    este bloque es solo un marcador de posición.
-    <br><br>
-    Enlace normal: <code>condicion-4.html</code><br>
-    Enlace para insertar (embed, sin menú): <code>condicion-4.html?embed=1</code>
-  </div>
+<main class="slider-container" id="slider">
+
+    <!-- ══════════════════════════════════════════════
+         1 · PORTADA
+    ══════════════════════════════════════════ -->
+    <section class="slide" data-title="Portada">
+        <div class="glass-panel items-center justify-center text-center">
+            <span class="gsap-reveal px-4 py-1.5 rounded-full bg-unad-orange text-white text-xs font-bold uppercase tracking-wider mb-6 flex items-center gap-2 shadow-sm">
+                <span class="iconify animate-pulse" data-icon="lucide:layers" data-width="16"></span> Condición 4
+            </span>
+            <h1 class="gsap-reveal text-4xl md:text-5xl lg:text-6xl font-display font-bold text-unad-teal dark:text-white mb-8 max-w-5xl leading-[1.1]">
+                Organización de actividades académicas y proceso formativo
+            </h1>
+
+            <div class="gsap-reveal grid grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl text-left bg-white/60 dark:bg-black/40 p-8 rounded-2xl border border-unad-teal/10 shadow-sm w-full">
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:graduation-cap" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Programa:</span><span class="font-semibold text-base dark:text-gray-200">Medicina Veterinaria</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:laptop" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Modalidad:</span><span class="font-semibold text-base dark:text-gray-200">Híbrida (presencial-virtual)</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-orange mt-1 shrink-0" data-icon="lucide:sparkles" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Modelo:</span><span class="font-semibold text-base text-unad-teal dark:text-unad-orange">MHUS 5.0</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:globe-2" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Enfoque:</span><span class="font-semibold text-base dark:text-gray-200">One Health</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:flask-conical" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Cursos prácticos:</span><span class="font-semibold text-base dark:text-gray-200">34 cursos</span></div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="iconify text-unad-teal mt-1 shrink-0" data-icon="lucide:building-2" data-width="22"></span>
+                    <div><span class="block text-xs font-bold text-gray-500 uppercase">Institución:</span><span class="font-semibold text-base dark:text-gray-200">UNAD</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         2 · MHUS 5.0
+    ══════════════════════════════════════════ -->
+    <section class="slide" data-title="Modelo Heutagógico">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:sparkles" data-width="32"></span>
+                    1. Modelo Heutagógico Unadista Solidario 5.0
+                </h2>
+                <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider">MHUS 5.0</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-5 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto text-center">
+                    El programa de Medicina Veterinaria se desarrolla bajo el <strong class="text-unad-teal dark:text-unad-orange">Modelo Heutagógico Unadista Solidario 5.0 (MHUS 5.0)</strong>,
+                    el cual promueve la autodeterminación, la autorregulación y la autogestión del aprendizaje, reconociendo al estudiante
+                    como protagonista de su proceso formativo.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-teal hover-card flex flex-col items-start gap-3 h-full">
+                        <span class="iconify text-unad-teal" data-icon="lucide:compass" data-width="28"></span>
+                        <h3 class="font-bold text-unad-teal dark:text-unad-orange text-base">Autodeterminación</h3>
+                        <p class="text-sm">El estudiante decide y orienta su propio proceso formativo.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-teal hover-card flex flex-col items-start gap-3 h-full">
+                        <span class="iconify text-unad-teal" data-icon="lucide:target" data-width="28"></span>
+                        <h3 class="font-bold text-unad-teal dark:text-unad-orange text-base">Autorregulación</h3>
+                        <p class="text-sm">Planifica, monitorea y evalúa su aprendizaje de forma consciente.</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-6 rounded-2xl border-l-4 border-unad-teal hover-card flex flex-col items-start gap-3 h-full">
+                        <span class="iconify text-unad-teal" data-icon="lucide:settings" data-width="28"></span>
+                        <h3 class="font-bold text-unad-teal dark:text-unad-orange text-base">Autogestión</h3>
+                        <p class="text-sm">Administra recursos, tiempos y estrategias para alcanzar sus metas.</p>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-navy to-unad-teal text-white p-6 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest text-unad-orange mb-2 flex items-center gap-2">
+                        <span class="iconify animate-pulse" data-icon="lucide:star" data-width="16"></span> Idea clave
+                    </p>
+                    <p class="font-medium text-base leading-relaxed">
+                        El estudiante es el protagonista de su propio proceso formativo.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar coherencia del modelo pedagógico con la modalidad híbrida.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Documento Maestro del programa y lineamientos del MHUS 5.0.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         3 · FORMACIÓN HÍBRIDA: AMBIENTES Y ESCENARIOS
+    ══════════════════════════════════════════ -->
+    <section class="slide" data-title="Formación híbrida">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:layers" data-width="32"></span>
+                    1. Formación híbrida: integración de ambientes y escenarios
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-5 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto text-center">
+                    La propuesta académica integra ambientes virtuales, escenarios presenciales, simulación, laboratorios, prácticas clínicas
+                    y acompañamiento permanente, garantizando una experiencia de aprendizaje <strong class="text-unad-teal dark:text-unad-orange">flexible, inclusiva y contextualizada</strong>.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:laptop" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Ambientes virtuales</h3>
+                            <p class="text-xs">Escenarios digitales de aprendizaje y acompañamiento.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:users" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Escenarios presenciales</h3>
+                            <p class="text-xs">Encuentros en territorio con docentes y pares.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:activity" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Simulación</h3>
+                            <p class="text-xs">Simuladores clínicos y laboratorios virtuales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:flask-conical" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Laboratorios</h3>
+                            <p class="text-xs">Espacios físicos y remotos de experimentación.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:stethoscope" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Prácticas clínicas</h3>
+                            <p class="text-xs">Rotaciones y docencia-servicio en contextos reales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:user-check" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Acompañamiento permanente</h3>
+                            <p class="text-xs">Tutoría y seguimiento continuo al estudiante.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar articulación real entre ambientes virtuales y presenciales.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Diseño instruccional y planeación de escenarios formativos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         4 · ONE HEALTH Y COMPETENCIAS
+    ══════════════════════════════════════════ -->
+    <section class="slide" data-title="One Health">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-spin" style="animation-duration: 12s;" data-icon="lucide:globe-2" data-width="32"></span>
+                    1. Enfoque One Health y competencias del programa
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto text-center">
+                    El programa responde a las necesidades actuales de la profesión veterinaria mediante la integración del enfoque
+                    <strong class="text-unad-teal dark:text-unad-orange">One Health</strong>, articulando salud animal, salud humana y sostenibilidad ambiental.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:stethoscope" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Salud animal</h3>
+                            <p class="text-xs">Atención clínica y sanitaria de las especies animales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:users" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Salud humana</h3>
+                            <p class="text-xs">Zoonosis, inocuidad y salud pública veterinaria.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:leaf" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Sostenibilidad ambiental</h3>
+                            <p class="text-xs">Producción responsable y cuidado de los ecosistemas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-sm font-bold text-unad-navy dark:text-white text-center pt-1">Competencias profesionales que se desarrollan</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-orange hover-card flex items-center gap-2">
+                        <span class="iconify text-unad-orange shrink-0" data-icon="lucide:paw-print" data-width="20"></span>
+                        <p class="text-xs font-semibold">Salud animal</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-orange hover-card flex items-center gap-2">
+                        <span class="iconify text-unad-orange shrink-0" data-icon="lucide:heart" data-width="20"></span>
+                        <p class="text-xs font-semibold">Bienestar animal</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-orange hover-card flex items-center gap-2">
+                        <span class="iconify text-unad-orange shrink-0" data-icon="lucide:shield-check" data-width="20"></span>
+                        <p class="text-xs font-semibold">Salud pública veterinaria</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-xl border-l-4 border-unad-orange hover-card flex items-center gap-2">
+                        <span class="iconify text-unad-orange shrink-0" data-icon="lucide:sprout" data-width="20"></span>
+                        <p class="text-xs font-semibold">Producción sostenible</p>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-orange to-unad-navy text-white p-5 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:star" data-width="16"></span> Mensaje clave
+                    </p>
+                    <p class="font-medium text-sm md:text-base text-center">Formación con impacto territorial y enfoque "Una Sola Salud".</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar integración efectiva del enfoque One Health en el currículo.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Resultados de aprendizaje y competencias alineadas al enfoque.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         5 · DIFERENCIAL HÍBRIDO
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Diferencial híbrido">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-pulse" data-icon="lucide:layout-grid" data-width="32"></span>
+                    2. Diferencial del programa: modelo híbrido de aprendizaje
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto text-center">
+                    El programa combina estratégicamente la formación virtual con experiencias prácticas progresivas que garantizan
+                    el desarrollo de competencias <strong class="text-unad-teal dark:text-unad-orange">clínicas, sanitarias y productivas</strong>.
+                </p>
+
+                <p class="text-sm font-bold text-unad-navy dark:text-white text-center">El estudiante aprende mediante:</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:monitor" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Ambientes Virtuales de Aprendizaje (AVA)</h3>
+                            <p class="text-xs">Entorno base del trabajo académico.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:activity" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Simuladores clínicos y laboratorios virtuales</h3>
+                            <p class="text-xs">Práctica segura y repetible antes del contacto real.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:video" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Webconferencias y acompañamiento permanente</h3>
+                            <p class="text-xs">Interacción sincrónica y tutoría continua.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:flask-conical" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Laboratorios presenciales</h3>
+                            <p class="text-xs">Experimentación con equipos y muestras reales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:map-pin" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Salidas de campo</h3>
+                            <p class="text-xs">Reconocimiento del territorio y de los sistemas productivos.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:stethoscope" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Prácticas clínicas y rotaciones</h3>
+                            <p class="text-xs">Inmersión profesional progresiva en escenarios reales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Evaluar pertinencia de la combinación virtual–presencial.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Diseño metodológico híbrido incorporado en el Documento Maestro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         6 · RESULTADO DEL MODELO
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Resultado del modelo">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:trending-up" data-width="32"></span>
+                    2. Resultado: una formación flexible, accesible y progresiva
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    Los estudiantes participan en ambientes virtuales de aprendizaje, simuladores clínicos, laboratorios virtuales,
+                    webconferencias, tutorías permanentes, salidas de campo, prácticas clínicas y rotaciones profesionales,
+                    fortaleciendo la <strong class="text-unad-teal dark:text-unad-orange">integración entre teoría y práctica</strong> desde los primeros periodos académicos.
+                </p>
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    Este modelo permite ampliar el acceso a una formación veterinaria de alta calidad en todo el territorio nacional,
+                    superando las limitaciones geográficas tradicionales y garantizando una preparación profesional coherente con las
+                    necesidades del sector agropecuario, sanitario y ambiental del país.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:globe" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Cobertura nacional</h3>
+                            <p class="text-xs">Formación de calidad sin limitaciones geográficas.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:trending-up" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Progresión teoría–práctica</h3>
+                            <p class="text-xs">Integración desde los primeros periodos académicos.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:compass" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Pertinencia sectorial</h3>
+                            <p class="text-xs">Respuesta a necesidades agropecuarias, sanitarias y ambientales.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-orange to-unad-navy text-white p-5 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:star" data-width="16"></span> Resultado
+                    </p>
+                    <p class="font-medium text-sm md:text-base text-center">Una formación flexible, accesible y con desarrollo progresivo de competencias clínicas y profesionales.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar los resultados prometidos por el modelo híbrido.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Indicadores de cobertura y resultados académicos del programa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         7 · TRAZABILIDAD RAP
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Trazabilidad RAP">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:list-ordered" data-width="32"></span>
+                    3. Trazabilidad de Resultados de Aprendizaje (RAP)
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    La estructura curricular ha sido diseñada para garantizar una relación <strong class="text-unad-teal dark:text-unad-orange">clara y verificable</strong> entre los resultados
+                    de aprendizaje, las competencias del egresado, los cursos académicos y el perfil profesional esperado.
+                </p>
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    Cada resultado de aprendizaje se desarrolla progresivamente a través de la malla curricular, permitiendo la consolidación
+                    gradual de capacidades científicas, clínicas, diagnósticas, epidemiológicas y productivas.
+                </p>
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    Los estudiantes avanzan desde la comprensión de los fundamentos biológicos de la salud animal, pasando por la
+                    interpretación de procesos patológicos y diagnósticos clínicos, hasta llegar a la toma de decisiones en contextos reales.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:book-open" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">1 · Fundamentos</h3>
+                            <p class="text-xs">Comprensión de los fundamentos biológicos de la salud animal.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:search" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">2 · Diagnóstico</h3>
+                            <p class="text-xs">Interpretación de procesos patológicos y diagnósticos clínicos.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:target" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">3 · Decisión profesional</h3>
+                            <p class="text-xs">Toma de decisiones en contextos reales del ejercicio veterinario.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-navy to-unad-teal text-white p-5 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest text-unad-orange mb-2 flex items-center gap-2">
+                        <span class="iconify animate-pulse" data-icon="lucide:star" data-width="16"></span> Idea clave
+                    </p>
+                    <p class="font-medium text-sm md:text-base text-center">La formación garantiza coherencia entre currículo, competencias y perfil de egreso.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Coherencia de la estructura curricular y los RAPs.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Documento Maestro con definición explícita de los RAPs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         8 · MATRIZ RAP ↔ EVIDENCIA
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Matriz RAP">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-pulse" data-icon="lucide:table" data-width="32"></span>
+                    3. Matriz de trazabilidad RAP ↔ Evidencia
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center pr-2 gap-4 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base text-center max-w-3xl mx-auto">
+                    Los RAP se desarrollan progresivamente durante toda la malla curricular:
+                </p>
+
+                <div class="bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+                    <table class="styled-table w-full">
+                        <thead>
+                            <tr>
+                                <th class="w-1/3">Resultado de Aprendizaje (RAP)</th>
+                                <th>Evidencia / Cursos asociados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold">Salud y bienestar animal</td>
+                                <td>Anatomía a Rotaciones</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Diagnóstico clínico</td>
+                                <td>Patología, Semiología, Medicina Interna</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Salud pública y One Health</td>
+                                <td>Epidemiología y Salud Pública</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Producción sostenible</td>
+                                <td>Nutrición, Bienestar Animal, Gestión Sanitaria</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-orange to-unad-navy text-white p-5 rounded-2xl shadow-lg border border-white/20 max-w-3xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:star" data-width="16"></span> Idea clave
+                    </p>
+                    <p class="font-medium text-sm md:text-base text-center">La formación garantiza coherencia entre currículo, competencias y perfil de egreso.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar correspondencia entre RAPs y evidencias de aprendizaje.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Matriz de trazabilidad RAP ↔ cursos ↔ evidencia en el Documento Maestro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         9 · ECOSISTEMA DE APRENDIZAJE HÍBRIDO
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Ecosistema">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:network" data-width="32"></span>
+                    4. Ecosistema de aprendizaje híbrido
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    La experiencia formativa se soporta en un ecosistema académico y tecnológico que integra trabajo autónomo,
+                    aprendizaje colaborativo, encuentros sincrónicos, investigación formativa, simulación y prácticas presenciales.
+                </p>
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    Este ecosistema permite que el estudiante construya conocimiento de manera <strong class="text-unad-teal dark:text-unad-orange">progresiva y contextualizada</strong>,
+                    desarrollando competencias para la resolución de problemas reales del campo veterinario.
+                </p>
+
+                <p class="text-sm font-bold text-unad-navy dark:text-white text-center pt-1">La experiencia formativa integra:</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:user-check" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Trabajo autónomo</h3>
+                            <p class="text-xs">Gestión propia del tiempo y del aprendizaje.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:users" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Trabajo colaborativo</h3>
+                            <p class="text-xs">Construcción conjunta de conocimiento.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:video" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Encuentros sincrónicos</h3>
+                            <p class="text-xs">Webconferencias y tutorías en tiempo real.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:activity" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Simulación</h3>
+                            <p class="text-xs">Entrenamiento clínico en entornos controlados.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:search" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Investigación formativa</h3>
+                            <p class="text-xs">Indagación aplicada al contexto veterinario.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:hospital" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Componente práctico presencial</h3>
+                            <p class="text-xs">Inmersión en escenarios reales de ejercicio profesional.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar articulación de todos los componentes del ecosistema.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Diseño del ecosistema formativo documentado en el programa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         10 · SOPORTES TECNOLÓGICOS + IMAGEN
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Soportes tecnológicos">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-pulse" data-icon="lucide:cloud" data-width="32"></span>
+                    4. Soportes tecnológicos del ecosistema
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    La plataforma AVA, Microsoft Teams, Webconference, las Comunidades de Interacción y Participación Académica y Social (CIPAS),
+                    el sistema OIL y la plataforma ACCeSIT conforman una <strong class="text-unad-teal dark:text-unad-orange">arquitectura tecnológica</strong> que fortalece el acompañamiento
+                    académico y la interacción permanente entre estudiantes y docentes.
+                </p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:monitor" data-width="22"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-0.5">AVA</h3>
+                            <p class="text-xs">Plataforma base de aprendizaje.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:messages-square" data-width="22"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-0.5">Teams</h3>
+                            <p class="text-xs">Encuentros y trabajo colaborativo.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:video" data-width="22"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-0.5">Webconference</h3>
+                            <p class="text-xs">Sesiones sincrónicas con docentes.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:users" data-width="22"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-0.5">CIPAS</h3>
+                            <p class="text-xs">Comunidades de interacción y participación.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:database" data-width="22"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-0.5">OIL</h3>
+                            <p class="text-xs">Organización de la interacción en línea.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:settings" data-width="22"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-0.5">ACCeSIT</h3>
+                            <p class="text-xs">Gestión académica y administrativa.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mt-1">
+                    <div class="md:col-span-2 bg-gradient-to-r from-unad-navy to-unad-teal text-white p-5 rounded-2xl shadow-lg border border-white/20">
+                        <p class="text-xs font-bold uppercase tracking-widest text-unad-orange mb-2 flex items-center gap-2">
+                            <span class="iconify animate-pulse" data-icon="lucide:star" data-width="16"></span> Idea clave
+                        </p>
+                        <p class="font-medium text-sm md:text-base">La tecnología complementa y fortalece el aprendizaje práctico. No reemplaza la formación clínica.</p>
+                    </div>
+                    <a href="EcosistemaAprendizajeHibrido.png" target="_blank" rel="noopener"
+                       class="block rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 hover-card cursor-zoom-in h-28 md:h-32"
+                       title="Abrir imagen en tamaño completo">
+                        <img src="EcosistemaAprendizajeHibrido.png" alt="Ecosistema de aprendizaje híbrido del programa de Medicina Veterinaria UNAD"
+                             class="w-full h-full object-cover">
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar disponibilidad y pertinencia de los soportes tecnológicos.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Convenios, licencias y documentación de la arquitectura tecnológica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         11 · COMPONENTE PRÁCTICO: FORTALEZA
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Componente práctico">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:stethoscope" data-width="32"></span>
+                    5. Componente práctico: principal fortaleza del programa
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    El componente práctico constituye uno de los elementos más significativos de la propuesta formativa. A través de cursos
+                    metodológicos y prácticos, los estudiantes participan en laboratorios, simuladores, centros de producción animal,
+                    prácticas clínicas, rotaciones y escenarios de docencia-servicio, desarrollando competencias fundamentales para el
+                    ejercicio profesional.
+                </p>
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    La formación práctica se desarrolla bajo una lógica de <strong class="text-unad-teal dark:text-unad-orange">complejidad progresiva</strong>, permitiendo que los estudiantes
+                    avancen desde experiencias de observación y reconocimiento hasta actividades de evaluación, intervención y toma de
+                    decisiones en contextos reales. Este proceso fortalece el juicio clínico, el razonamiento científico y la capacidad de
+                    responder a problemáticas sanitarias y productivas con criterios éticos, técnicos y normativos.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:eye" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Observación y reconocimiento</h3>
+                            <p class="text-xs">Primer contacto guiado con escenarios reales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:syringe" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Evaluación e intervención</h3>
+                            <p class="text-xs">Aplicación de procedimientos y toma de decisiones clínicas.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:scale" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Criterios éticos, técnicos y normativos</h3>
+                            <p class="text-xs">Actuación profesional responsable en territorio.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-orange to-unad-navy text-white p-5 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:star" data-width="16"></span> Mensaje clave
+                    </p>
+                    <p class="font-medium text-sm md:text-base text-center">Aprender haciendo en contextos reales de salud animal y producción pecuaria.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar la progresión y complejidad de las prácticas.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Planeación de prácticas con niveles progresivos documentados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         12 · 34 CURSOS Y ESCENARIOS
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="34 cursos">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:flask-conical" data-width="32"></span>
+                    5. Cursos metodológicos y prácticos
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <div class="rounded-2xl bg-gradient-to-r from-unad-teal to-unad-navy text-white p-6 flex items-center gap-6 shadow-lg max-w-3xl mx-auto w-full">
+                    <span class="font-display font-extrabold text-6xl md:text-7xl leading-none">34</span>
+                    <p class="text-sm md:text-base leading-snug">
+                        cursos metodológicos y prácticos que articulan la teoría con la práctica a lo largo de toda la malla curricular.
+                    </p>
+                </div>
+
+                <p class="text-sm font-bold text-unad-navy dark:text-white text-center">Desarrollados mediante:</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:flask-conical" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Laboratorios</h3>
+                            <p class="text-xs">Espacios de experimentación guiada.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:activity" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Simuladores</h3>
+                            <p class="text-xs">Entrenamiento clínico seguro y repetible.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:stethoscope" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Prácticas clínicas</h3>
+                            <p class="text-xs">Atención directa de casos reales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:paw-print" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Centros de producción</h3>
+                            <p class="text-xs">Sistemas pecuarios y salud de hato.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:route" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Rotaciones</h3>
+                            <p class="text-xs">Pasantía por áreas clínicas y sanitarias.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:hospital" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Escenarios de docencia-servicio</h3>
+                            <p class="text-xs">Articulación universidad–territorio.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar número y naturaleza de los cursos metodológicos y prácticos.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Malla curricular con los 34 cursos identificados y clasificados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         13 · LISTADO DE CURSOS (TABLA)
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Listado de cursos">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-3 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:file-spreadsheet" data-width="32"></span>
+                    5. Listado de cursos metodológicos y prácticos
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-hidden custom-scroll gsap-reveal flex flex-col justify-center gap-3 pr-2 text-gray-800 dark:text-gray-200">
+                <div class="flex flex-wrap items-center justify-center gap-3 text-xs">
+                    <span class="px-3 py-1 rounded-full bg-unad-teal/10 border border-unad-teal/30 font-semibold text-unad-teal dark:text-unad-orange"><strong>M</strong> = Metodológico</span>
+                    <span class="px-3 py-1 rounded-full bg-unad-orange/10 border border-unad-orange/30 font-semibold text-unad-orange"><strong>P</strong> = Práctico</span>
+                </div>
+
+                <div class="bg-white/80 dark:bg-black/50 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden flex-1 min-h-0">
+                    <div class="h-full overflow-y-auto custom-scroll">
+                        <table class="styled-table w-full text-xs">
+                            <thead>
+                                <tr>
+                                    <th style="width:55%">Curso</th>
+                                    <th style="width:20%">Tipo</th>
+                                    <th style="width:25%">Créditos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Introducción a la Medicina Veterinaria</td><td>M</td><td>2</td></tr>
+                                <tr><td>Anatomía Veterinaria comparada</td><td>M</td><td>4</td></tr>
+                                <tr><td>Inmunología</td><td>M</td><td>3</td></tr>
+                                <tr><td>Prácticas clínicas integradas II</td><td>P</td><td>3</td></tr>
+                                <tr><td>Rotaciones clínicas I</td><td>P</td><td>4</td></tr>
+                                <tr><td>Rotaciones clínicas II</td><td>P</td><td>4</td></tr>
+                                <tr><td>Biología celular y molecular</td><td>M</td><td>3</td></tr>
+                                <tr><td>Biología del desarrollo y fisiología animal</td><td>M</td><td>3</td></tr>
+                                <tr><td>Nutrición animal</td><td>M</td><td>3</td></tr>
+                                <tr><td>Microbiología veterinaria</td><td>M</td><td>2</td></tr>
+                                <tr><td>Imagenología Veterinaria</td><td>M</td><td>3</td></tr>
+                                <tr><td>Prácticas clínicas integradas I</td><td>P</td><td>3</td></tr>
+                                <tr><td>Medicina de urgencias y cuidados intensivos</td><td>M</td><td>2</td></tr>
+                                <tr><td>Salud de hato y gestión sanitaria</td><td>M</td><td>2</td></tr>
+                                <tr><td>Química orgánica</td><td>M</td><td>3</td></tr>
+                                <tr><td>Bioquímica metabólica</td><td>M</td><td>3</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-3 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar coherencia entre créditos y naturaleza del curso.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Malla curricular oficial con créditos y tipo de curso.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         14 · RUTA DEL COMPONENTE PRÁCTICO
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Ruta del componente">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:route" data-width="32"></span>
+                    6. Ruta del componente práctico
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    La UNAD garantiza una ruta estructurada para la gestión y desarrollo de las prácticas académicas, que incluye la planeación
+                    de escenarios, contratación de espacios, programación de actividades, asignación docente, inducción, acompañamiento,
+                    evaluación y seguimiento permanente. Esta organización asegura la <strong class="text-unad-teal dark:text-unad-orange">trazabilidad completa del proceso</strong>,
+                    desde la inscripción del estudiante hasta la evaluación final de los resultados de aprendizaje alcanzados.
+                </p>
+
+                <p class="text-sm font-bold text-unad-navy dark:text-white text-center">La UNAD garantiza:</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="font-display font-extrabold text-2xl text-unad-orange leading-none">1</span>
+                        <p class="text-xs font-semibold leading-snug">Planeación y contratación de escenarios</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="font-display font-extrabold text-2xl text-unad-orange leading-none">2</span>
+                        <p class="text-xs font-semibold leading-snug">Asignación docente</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="font-display font-extrabold text-2xl text-unad-orange leading-none">3</span>
+                        <p class="text-xs font-semibold leading-snug">Programación OIL</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="font-display font-extrabold text-2xl text-unad-orange leading-none">4</span>
+                        <p class="text-xs font-semibold leading-snug">Inducción</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="font-display font-extrabold text-2xl text-unad-orange leading-none">5</span>
+                        <p class="text-xs font-semibold leading-snug">Desarrollo de práctica</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="font-display font-extrabold text-2xl text-unad-orange leading-none">6</span>
+                        <p class="text-xs font-semibold leading-snug">Evaluación</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3 md:col-span-2">
+                        <span class="font-display font-extrabold text-2xl text-unad-orange leading-none">7</span>
+                        <p class="text-xs font-semibold leading-snug">Seguimiento y mejora continua</p>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-navy to-unad-teal text-white p-5 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest text-unad-orange mb-2 flex items-center gap-2">
+                        <span class="iconify animate-pulse" data-icon="lucide:star" data-width="16"></span> Idea clave
+                    </p>
+                    <p class="font-medium text-sm md:text-base text-center">Existe trazabilidad completa desde la inscripción hasta la evaluación de la práctica.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar completitud y trazabilidad de la ruta operativa de prácticas.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Procedimientos documentados y convenios vigentes del programa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         15 · INCLUSIÓN Y ACCESO
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Inclusión y acceso">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-pulse" data-icon="lucide:accessibility" data-width="32"></span>
+                    7. Inclusión y acceso en el modelo híbrido
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    El programa implementa los principios del <strong class="text-unad-teal dark:text-unad-orange">Diseño Universal para el Aprendizaje (DUA)</strong>, garantizando condiciones
+                    de accesibilidad, flexibilidad e inclusión para estudiantes provenientes de diversos contextos sociales, geográficos y culturales.
+                </p>
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    La disponibilidad de recursos multiformato, audiolibros, podcasts, contenidos accesibles, lectores de pantalla y herramientas
+                    tecnológicas especializadas favorece la participación efectiva de todos los estudiantes en el proceso formativo.
+                </p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:puzzle" data-width="22"></span>
+                        <p class="text-xs font-semibold">Diseño Universal para el Aprendizaje (DUA)</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:layers" data-width="22"></span>
+                        <p class="text-xs font-semibold">Recursos multiformato</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:activity" data-width="22"></span>
+                        <p class="text-xs font-semibold">Simuladores y laboratorios virtuales</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:eye" data-width="22"></span>
+                        <p class="text-xs font-semibold">Lectores de pantalla</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:headphones" data-width="22"></span>
+                        <p class="text-xs font-semibold">Audiolibros y podcasts</p>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-4 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:keyboard" data-width="22"></span>
+                        <p class="text-xs font-semibold">Herramientas de accesibilidad tecnológica</p>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-green to-unad-teal text-white p-5 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:star" data-width="16"></span> Idea clave
+                    </p>
+                    <p class="font-medium text-sm md:text-base text-center">La formación híbrida amplía oportunidades de acceso y permanencia en todos los territorios, democratizando la educación superior.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar aplicación efectiva de los principios DUA.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Recursos accesibles y políticas de inclusión del programa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         16 · PROTOCOLOS Y ESTÁNDARES
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Protocolos">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-teal animate-bounce" data-icon="lucide:shield-check" data-width="32"></span>
+                    7. Protocolos y estándares del componente práctico
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col justify-center gap-4 pr-2 text-gray-800 dark:text-gray-200">
+                <p class="text-sm md:text-base leading-relaxed max-w-4xl mx-auto">
+                    Adicionalmente, el programa incorpora protocolos específicos relacionados con bienestar animal, bioseguridad, manejo de
+                    residuos biológicos y relaciones docencia-servicio, garantizando condiciones adecuadas para el desarrollo de las
+                    actividades prácticas y el cumplimiento de <strong class="text-unad-teal dark:text-unad-orange">estándares nacionales e internacionales</strong> aplicables a la profesión veterinaria.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:heart" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Bienestar animal</h3>
+                            <p class="text-xs">Trato ético y condiciones adecuadas en toda actividad con animales.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:shield-check" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Bioseguridad</h3>
+                            <p class="text-xs">Prevención de riesgos biológicos en laboratorios y clínicas.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:recycle" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Manejo de residuos biológicos</h3>
+                            <p class="text-xs">Disposición responsable conforme a la normatividad vigente.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-black/40 p-5 rounded-2xl border-l-4 border-unad-teal hover-card flex items-start gap-3">
+                        <span class="iconify text-unad-teal shrink-0 mt-1" data-icon="lucide:handshake" data-width="24"></span>
+                        <div>
+                            <h3 class="font-bold text-unad-teal dark:text-unad-orange text-sm mb-1">Relaciones docencia-servicio</h3>
+                            <p class="text-xs">Convenios y condiciones para la práctica formativa en territorio.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-unad-navy to-unad-teal text-white p-5 rounded-2xl shadow-lg border border-white/20 max-w-4xl mx-auto w-full">
+                    <p class="text-xs font-bold uppercase tracking-widest text-unad-orange mb-2 flex items-center gap-2">
+                        <span class="iconify animate-pulse" data-icon="lucide:star" data-width="16"></span> Idea clave
+                    </p>
+                    <p class="font-medium text-sm md:text-base text-center">Cumplimiento de estándares nacionales e internacionales aplicables a la profesión veterinaria.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar existencia y aplicación de los protocolos declarados.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Documentos de protocolos, comités de bioética y convenios docencia-servicio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         17 · MATRIZ DUA
+    ══════════════════════════════════════════════ -->
+    <section class="slide" data-title="Matriz DUA">
+        <div class="glass-panel">
+            <div class="gsap-reveal flex justify-between items-end border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+                <h2 class="text-2xl md:text-3xl font-display font-bold text-unad-navy dark:text-white flex items-center gap-3">
+                    <span class="iconify text-unad-orange animate-spin" style="animation-duration: 12s;" data-icon="lucide:puzzle" data-width="32"></span>
+                    7. Matriz DUA: principios y operacionalización
+                </h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll gsap-reveal flex flex-col gap-4 pr-2 text-gray-800 dark:text-gray-200 justify-center">
+
+                <!-- FILA 1 -->
+                <div class="bg-white/80 dark:bg-black/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card">
+                    <div class="bg-unad-teal text-white px-5 py-3 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:layers" data-width="20"></span>
+                        <h3 class="font-bold text-sm">Principio I · Múltiples medios de representación — el "qué" del aprendizaje</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-orange uppercase tracking-wider mb-2">Pauta / Estrategia Tecnopedagógica</span>
+                            <p class="text-xs md:text-sm"><strong>Percepción:</strong> información en diversos formatos sensoriales. · <strong>Lenguaje y símbolos:</strong> clarificación de terminología disciplinar. · <strong>Comprensión:</strong> andamiaje cognitivo e ideas clave.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-teal dark:text-unad-orange uppercase tracking-wider mb-2">Operacionalización en Medicina Veterinaria</span>
+                            <p class="text-xs md:text-sm">Contenidos en multiformato (textos accesibles, audiolibros, lecturas adaptadas y podcasts especializados en sanidad animal). Uso de simuladores clínicos virtuales, laboratorios remotos y video lecciones interactivas subtituladas. Glosarios técnicos y guías instruccionales integradas en el entorno virtual.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FILA 2 -->
+                <div class="bg-white/80 dark:bg-black/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card">
+                    <div class="bg-unad-teal text-white px-5 py-3 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:settings" data-width="20"></span>
+                        <h3 class="font-bold text-sm">Principio II · Múltiples medios de acción y expresión — el "cómo" del aprendizaje</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-orange uppercase tracking-wider mb-2">Pauta / Estrategia Tecnopedagógica</span>
+                            <p class="text-xs md:text-sm"><strong>Acción física:</strong> navegación y herramientas de asistencia. · <strong>Expresión y comunicación:</strong> variedad de medios para demostrar el saber. · <strong>Función ejecutiva:</strong> apoyo a la planificación y autorregulación.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-teal dark:text-unad-orange uppercase tracking-wider mb-2">Operacionalización en Medicina Veterinaria</span>
+                            <p class="text-xs md:text-sm">Plataforma AVA accesible con soporte para lectores de pantalla, navegación por teclado e intérpretes de LSC. Diversificación de evidencias: informes clínicos, estudios de caso real, proyectos comunitarios (SISSU), evaluaciones objetivas y actividades en laboratorios/simuladores. Guías paso a paso por fases y rúbricas claras orientadas a RAC.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FILA 3 -->
+                <div class="bg-white/80 dark:bg-black/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover-card">
+                    <div class="bg-unad-teal text-white px-5 py-3 flex items-center gap-2">
+                        <span class="iconify" data-icon="lucide:heart" data-width="20"></span>
+                        <h3 class="font-bold text-sm">Principio III · Múltiples medios de compromiso e implicación — el "por qué" del aprendizaje</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-orange uppercase tracking-wider mb-2">Pauta / Estrategia Tecnopedagógica</span>
+                            <p class="text-xs md:text-sm"><strong>Captar el interés:</strong> relevancia y autenticidad del aprendizaje. · <strong>Mantener el esfuerzo:</strong> colaboración y retroalimentación. · <strong>Autorregulación:</strong> desarrollo de la heutagogía y motivación.</p>
+                        </div>
+                        <div class="p-5">
+                            <span class="block text-xs font-bold text-unad-teal dark:text-unad-orange uppercase tracking-wider mb-2">Operacionalización en Medicina Veterinaria</span>
+                            <p class="text-xs md:text-sm">Aprendizaje basado en núcleos problémicos territoriales bajo el enfoque One Health. Participación activa en las CIPAS y tutorías. Acompañamiento temprano por H-Mediadores PRISMA, consejería académica y asistencia en tiempo real mediante chatbots e IA (VictorIA y DoBot) para evitar la deserción.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mt-4 shrink-0 gsap-reveal">
+                <div class="bg-unad-orange/10 border-l-4 border-unad-orange p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-orange mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:alert-circle" data-width="18"></span> Criterio del Par Académico</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Verificar operacionalización efectiva de los tres principios DUA.</p>
+                </div>
+                <div class="bg-unad-green/10 border-l-4 border-unad-green p-3 rounded-r-lg">
+                    <h4 class="font-bold text-unad-green mb-1 flex items-center gap-2 text-sm"><span class="iconify" data-icon="lucide:check-circle-2" data-width="18"></span> Evidencia que Sustenta</h4>
+                    <p class="text-xs text-gray-700 dark:text-gray-300">Matriz DUA documentada con evidencias de aplicación por principio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </main>
 
-<script src="js/embed-mode.js"></script>
-<script src="js/theme.js"></script>
+<script>
+    /* ============================================================
+       MODO EMBED (?embed=1)
+    ============================================================ */
+    const urlParams = new URLSearchParams(window.location.search);
+    const isEmbed = urlParams.get('embed') === '1';
+
+    if (isEmbed) {
+        const nav = document.getElementById('main-nav');
+        const sideNav = document.getElementById('side-nav');
+        if (nav) nav.style.display = 'none';
+        if (sideNav) sideNav.style.display = 'none';
+        document.querySelectorAll('.slide').forEach(s => {
+            s.style.paddingTop = '1.5rem';
+        });
+    }
+
+    /* ============================================================
+       TEMA CLARO / OSCURO
+    ============================================================ */
+    const themeBtn = document.getElementById('theme-btn');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            themeBtn.innerHTML = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+        });
+    }
+
+    /* ============================================================
+       NAVEGACIÓN Y ANIMACIÓN
+    ============================================================ */
+    gsap.registerPlugin(Observer);
+
+    const slides = document.querySelectorAll('.slide');
+    const dotContainer = document.getElementById('dot-container');
+    let currentIndex = 0;
+    let isAnimating = false;
+
+    /* --- Crear dots con tooltip (título) --- */
+    if (!isEmbed && dotContainer) {
+        slides.forEach((slide, i) => {
+            const title = slide.getAttribute('data-title') || ('Diapositiva ' + (i + 1));
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'dot-wrapper';
+            wrapper.setAttribute('data-title', title);
+            wrapper.setAttribute('aria-label', 'Ir a: ' + title);
+            wrapper.addEventListener('click', () => gotoSlide(i, i > currentIndex ? 1 : -1));
+
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+
+            wrapper.appendChild(dot);
+            dotContainer.appendChild(wrapper);
+        });
+    }
+
+    const dotWrappers = document.querySelectorAll('.dot-wrapper');
+    const dots = document.querySelectorAll('.dot');
+
+    function updateDots() {
+        if (isEmbed) return;
+        dots.forEach((dot, i) => {
+            if (i === currentIndex) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+    }
+
+    /* --- Estado inicial --- */
+    gsap.set(slides, { yPercent: 100, autoAlpha: 0 });
+    gsap.set(slides[0], { yPercent: 0, autoAlpha: 1 });
+    updateDots();
+    animateElementsIn(slides[0]);
+
+    function animateElementsIn(slide) {
+        const elements = slide.querySelectorAll('.gsap-reveal');
+        if (elements.length > 0) {
+            gsap.fromTo(elements,
+                { y: 30, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.06, ease: "power3.out", overwrite: "auto", delay: 0.05 }
+            );
+        }
+    }
+
+    function gotoSlide(index, direction) {
+        if (isAnimating || index < 0 || index >= slides.length || index === currentIndex) return;
+        isAnimating = true;
+
+        const currentSlide = slides[currentIndex];
+        const nextSlide = slides[index];
+
+        const yPercentOut = direction === 1 ? -100 : 100;
+        const yPercentIn = direction === 1 ? 100 : -100;
+
+        gsap.set(nextSlide, { yPercent: yPercentIn, autoAlpha: 1 });
+
+        const tl = gsap.timeline({
+            defaults: { duration: 0.7, ease: "power4.inOut" },
+            onComplete: () => {
+                gsap.set(currentSlide, { autoAlpha: 0 });
+                currentIndex = index;
+                updateDots();
+                isAnimating = false;
+            }
+        });
+
+        tl.to(currentSlide, { yPercent: yPercentOut })
+          .to(nextSlide, { yPercent: 0 }, "<");
+
+        animateElementsIn(nextSlide);
+    }
+
+    /* --- Observer (scroll / touch) --- */
+    Observer.create({
+        type: "wheel,touch,pointer",
+        wheelSpeed: -1,
+        tolerance: 40,
+        preventDefault: false,
+        onDown: () => gotoSlide(currentIndex - 1, -1),
+        onUp: () => gotoSlide(currentIndex + 1, 1),
+    });
+
+    /* --- Aislar scroll interno --- */
+    document.querySelectorAll('.custom-scroll').forEach(el => {
+        el.addEventListener('wheel', (e) => {
+            const isAtTop = el.scrollTop === 0;
+            const isAtBottom = Math.abs((el.scrollHeight - el.scrollTop) - el.clientHeight) < 2;
+            if ((e.deltaY < 0 && !isAtTop) || (e.deltaY > 0 && !isAtBottom)) {
+                e.stopPropagation();
+            }
+        }, { passive: false });
+
+        el.addEventListener('touchmove', (e) => {
+            e.stopPropagation();
+        }, { passive: false });
+    });
+
+    /* --- Teclado --- */
+    window.addEventListener('keydown', (e) => {
+        if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+            e.preventDefault();
+            gotoSlide(currentIndex + 1, 1);
+        } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault();
+            gotoSlide(currentIndex - 1, -1);
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            gotoSlide(0, -1);
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            gotoSlide(slides.length - 1, 1);
+        }
+    });
+
+    /* --- Botones arriba/abajo --- */
+    if (!isEmbed) {
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        if (btnUp) btnUp.addEventListener('click', () => gotoSlide(currentIndex - 1, -1));
+        if (btnDown) btnDown.addEventListener('click', () => gotoSlide(currentIndex + 1, 1));
+    }
+</script>
 </body>
 </html>
